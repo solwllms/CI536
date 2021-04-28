@@ -41,7 +41,7 @@ namespace plugin
 
         public void LoginPrompt()
         {
-            Configuration.SetupFile("steam");
+            UserConfig.RegisterConfig("steam");
 
             Steam_login();
         }
@@ -59,7 +59,7 @@ namespace plugin
             manager.Subscribe<SteamUser.LoggedOffCallback>(OnLoggedOff);
             manager.Subscribe<SteamUser.LoginKeyCallback>(OnLoginKey);
 
-            manager.Subscribe<SteamFriends.FriendsListCallback>(OnFriendList);
+            //manager.Subscribe<SteamFriends.FriendsListCallback>(OnFriendList);
             manager.Subscribe<SteamUnifiedMessages.ServiceMethodResponse>(OnMethodResponse);
 
             unifiedMessages = client.GetHandler<SteamUnifiedMessages>();
@@ -99,8 +99,8 @@ namespace plugin
 
         private void OnLoginKey(SteamUser.LoginKeyCallback obj)
         {
-            Configuration.SetValue(PluginDLL.CONFIG_FILE, "username", username);
-            Configuration.SetValue(PluginDLL.CONFIG_FILE, "savedLogin", obj.LoginKey);
+            UserConfig.SetValue(PluginDLL.CONFIG_FILE, "username", username);
+            UserConfig.SetValue(PluginDLL.CONFIG_FILE, "saved_login", obj.LoginKey);
         }
 
         private void OnLoggedOn(SteamUser.LoggedOnCallback obj)
@@ -157,14 +157,33 @@ namespace plugin
 
             Console.BackgroundColor = ConsoleColor.Cyan;
             Console.ForegroundColor = ConsoleColor.Black;
+            /*
             Console.WriteLine($"You own {resp.game_count} games!");
             Console.ResetColor();
             Console.WriteLine("Press any key to list them.");
-            Console.ReadKey();
+            Console.ReadKey();*/
+            int existing = 0;
             foreach (var game in resp.games)
             {
-                Console.WriteLine($"{game.name} ({game.appid}) Playtime: {game.playtime_forever / 60}hrs");
+                if (Library.HasGameEntry(game.name))
+                {
+                    //TODO: we should add a config here too tho!
+                    existing++;
+                    continue;
+                }
+                GameEntry entry = new GameEntry();
+                entry.Title = game.name;
+                entry.AddConfig(new LaunchConfig(){
+                    Type = "steam",
+                    LaunchCommand = $"steam://rungameid/{game.appid}"
+                });
+
+                Library.AddGameEntry(game.name, entry);
+                //Console.WriteLine($"{game.name} ({game.appid}) Playtime: {game.playtime_forever / 60}hrs");
             }
+
+            Library.SaveChanges();
+            Console.WriteLine($"Added { resp.game_count - existing } games to your library.");
 
             gameRequest = JobID.Invalid;
         }
@@ -200,10 +219,10 @@ namespace plugin
 
         private void OnConnected(SteamClient.ConnectedCallback obj)
         {
-            if (Configuration.HasProperty(PluginDLL.CONFIG_FILE, "username") && Configuration.HasProperty(PluginDLL.CONFIG_FILE, "savedLogin"))
+            if (UserConfig.HasProperty(PluginDLL.CONFIG_FILE, "username") && UserConfig.HasProperty(PluginDLL.CONFIG_FILE, "saved_login"))
             {
-                username = Configuration.GetValue<string>(PluginDLL.CONFIG_FILE, "username");
-                savedLogin = Configuration.GetValue<string>(PluginDLL.CONFIG_FILE, "savedLogin");
+                username = UserConfig.GetValue<string>(PluginDLL.CONFIG_FILE, "username");
+                savedLogin = UserConfig.GetValue<string>(PluginDLL.CONFIG_FILE, "saved_login");
             }
             else if(username == null || savedLogin == null)
             {

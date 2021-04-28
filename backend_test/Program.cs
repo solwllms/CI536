@@ -12,10 +12,16 @@ namespace CI536
     {
         static void Main(string[] args)
         {
-            Configuration.Init();
+            UserConfig.Init();
+            Library.Init();
 
-            Configuration.SetupFile("test");
-            Configuration.SetValue("test", "hello", "world");
+            Library.AddGameEntry("Minecraft", new GameEntry())
+            .AddConfig(new LaunchConfig()
+            {
+                Type = "local",
+                LaunchCommand = "C:/"
+            });
+            Library.SaveChanges();
 
             Console.WriteLine("Backend Test!");
             Console.WriteLine("Finding dlls..");

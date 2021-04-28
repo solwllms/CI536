@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CI536
 {
-    public class Configuration
+    public class UserConfig
     {
         private static Dictionary<string, JObject> configFiles;
 
@@ -18,10 +19,10 @@ namespace CI536
         {
             configFiles = new Dictionary<string, JObject>();
             configPath = Directory.GetCurrentDirectory() + "/config/";
-            LoadFiles();
+            LoadAllConfigs();
         }
 
-        static void LoadFiles()
+        static void LoadAllConfigs()
         {
             if (configFiles == null) return;
 
@@ -34,12 +35,13 @@ namespace CI536
                 if (!File.Exists(file)) return;
 
                 string contents = File.ReadAllText(file);
+                contents = contents.Replace("\r\n", "\n");
                 JObject json = JObject.Parse(contents);
                 configFiles.Add(Path.GetFileNameWithoutExtension(file),json);
             }
         }
 
-        public static void SaveAllFiles()
+        public static void SaveAllConfigs()
         {
             foreach (var entry in configFiles)
             {
@@ -47,21 +49,25 @@ namespace CI536
             }
         }
 
-        static void SaveFile(string file)
+        static void SaveConfig(string file)
         {
             if (!configFiles.ContainsKey(file)) return;
 
-            File.WriteAllText(configPath + file + ".json", configFiles[file].ToString());
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+
+            string json = JsonConvert.SerializeObject(configFiles[file], Formatting.Indented);
+            json = json.Replace("\r\n", "\n");
+            File.WriteAllText(configPath + file + ".json", json);
         }
 
-        public static void SetupFile(string file)
+        public static void RegisterConfig(string file)
         {
             // we've already got it
             if (configFiles.ContainsKey(file)) return;
 
             JObject obj = new JObject();
             configFiles.Add(file, obj);
-            SaveFile(file);
+            SaveConfig(file);
         }
 
         public static void SetValue(string file, string property, object value)
@@ -74,18 +80,26 @@ namespace CI536
             }
             else configFiles[file].Add(property, JToken.FromObject(value));
 
-            SaveFile(file);
+            SaveConfig(file);
         }
 
-        public static T GetValue<T>(string file, string property)
+        public static T GetValue<T>(string file, string property, T fallback = default(T))
         {
-            if (!configFiles.ContainsKey(file)) return default(T);
+            if (!configFiles.ContainsKey(file))
+            {
+                Console.WriteLine($"Error: User config file '{file}' not initialised.");
+                return fallback;
+            }
 
             if (configFiles[file].ContainsKey(property))
             {
                 return configFiles[file].Value<T>(property);
             }
-            else return default(T);
+            else
+            {
+                SetValue(file, property, fallback);
+                return fallback;
+            }
         }
 
         public static bool HasProperty(string file, string property)
