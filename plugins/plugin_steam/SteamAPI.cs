@@ -2,7 +2,6 @@
 using Newtonsoft.Json.Linq;
 using SteamKit2;
 using SteamKit2.Internal;
-using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
@@ -12,9 +11,24 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System;
+using System.Windows;
 
 namespace plugin
 {
+    public enum AUTH_MODE
+    {
+        NONE = 0,
+        APP = 1,
+        EMAIL = 2
+    }
+
+    enum  LOGIN_STATUS {
+        AWAITING = -1,
+        FAIL = 0,
+        SUCCESS = 1,
+    }
+
     /*
         Implementation uses some elements and guidance from the SteamKit examples.
         https://github.com/SteamRE/SteamKit/tree/master/Samples
@@ -29,25 +43,33 @@ namespace plugin
         private SteamUnifiedMessages unifiedMessages;
         private SteamUnifiedMessages.UnifiedService<IPlayer> servicePlayer;
 
-        private bool isRunning;
+        private LOGIN_STATUS loginStatus;
 
+        private bool background;
         private string username = null;
         private string password = null;
-        private string emailAuth;
-        private string appAuth;
+        private string authCode = null;
+        private string emailCode = null;
+
         private string savedLogin;
 
-        private JobID gameRequest = JobID.Invalid;
+        private SteamID steamID;
 
-        public void LoginPrompt()
+        private Login loginWindow;
+
+        private JobID gameRequest = JobID.Invalid;
+        CancellationTokenSource cancelCallbackTok;
+
+        public async Task<bool> LoginPrompt(bool background = false, string username = null, string password = null, string authCode = null, string emailCode = null)
         {
             UserConfig.RegisterConfig("steam");
 
-            Steam_login();
-        }
+            this.background = background;
+            this.username = username;
+            this.password = password;
+            this.authCode = authCode;
+            this.emailCode = emailCode;
 
-        private void Steam_login()
-        {
             client = new SteamClient();
             manager = new CallbackManager(client);
             user = client.GetHandler<SteamUser>();
@@ -65,12 +87,29 @@ namespace plugin
             unifiedMessages = client.GetHandler<SteamUnifiedMessages>();
             servicePlayer = unifiedMessages.CreateService<IPlayer>();
 
-            Console.WriteLine("Connecting to steam..");
+            loginStatus = LOGIN_STATUS.AWAITING;
+            Debug.WriteLine("Connecting to steam..");
             client.Connect();
 
-            isRunning = true;
-            while (isRunning)
-                manager.RunWaitCallbacks(TimeSpan.FromSeconds(1));
+            cancelCallbackTok = new CancellationTokenSource();
+            Task callbackTask = new Task(() =>
+            {
+                while (!cancelCallbackTok.IsCancellationRequested)
+                {
+                    try
+                    {
+                        manager.RunCallbacks();
+                    }
+                    catch(Exception e) { }
+                }
+            }, cancelCallbackTok.Token);
+            callbackTask.Start();
+
+            return await Task<bool>.Run(() =>
+            {
+                while (loginStatus == LOGIN_STATUS.AWAITING) { }
+                return loginStatus == LOGIN_STATUS.SUCCESS;
+            });
         }
 
         private void OnFriendList(SteamFriends.FriendsListCallback obj)
@@ -80,21 +119,21 @@ namespace plugin
 
             Console.BackgroundColor = ConsoleColor.Cyan;
             Console.ForegroundColor = ConsoleColor.Black;
-            Console.WriteLine($"You have {obj.FriendList.Count} friends!");
+            Debug.WriteLine($"You have {obj.FriendList.Count} friends!");
             Console.ResetColor();
-            Console.WriteLine("Press any key to list them.");
+            Debug.WriteLine("Press any key to list them.");
             Console.ReadKey();
             foreach (var friend in obj.FriendList)
             {
                 string name = friends.GetFriendPersonaName(friend.SteamID);
                 if (name == null) name = friend.SteamID.Render();
-                Console.WriteLine($"{name} ({friends.GetFriendPersonaState(friend.SteamID)})");
+                Debug.WriteLine($"{name} ({friends.GetFriendPersonaState(friend.SteamID)})");
             }
         }
 
         private void OnLoggedOff(SteamUser.LoggedOffCallback obj)
         {
-            Console.WriteLine("Logged out of steam {0}", obj.Result);
+            Debug.WriteLine($"Logged out of steam {obj.Result}");
         }
 
         private void OnLoginKey(SteamUser.LoginKeyCallback obj)
@@ -112,12 +151,12 @@ namespace plugin
             {
                 if (isAuthEmail)
                 {
-                    Console.Write("Please enter your authentication code, sent to {0}: ", obj.EmailDomain);
-                    emailAuth = Console.ReadLine();
+                    Debug.WriteLine($"Email authentication code required.");
+                    ShowLogin(AUTH_MODE.EMAIL, "Enter the code sent to your email.");
                 }
                 else {
-                    Console.Write("Please enter your app authentication code: ");
-                    appAuth = Console.ReadLine();
+                    Debug.WriteLine($"App authentication code required.");
+                    ShowLogin(AUTH_MODE.APP, "Enter SteamGuard code from your app.");
                 }
 
                 return;
@@ -126,21 +165,37 @@ namespace plugin
             // something went wrong
             if (obj.Result != EResult.OK)
             {
-                Console.WriteLine("Unable to logon to Steam: {0} / {1}", obj.Result, obj.ExtendedResult);
-                isRunning = false;
+                AUTH_MODE auth = AUTH_MODE.NONE;
+                if(authCode != null && emailCode == null) auth = AUTH_MODE.APP;
+                else if (authCode == null && emailCode != null) auth = AUTH_MODE.EMAIL;
+                ShowLogin(auth, $"Unable to login ({obj.Result})");
+
+                Debug.WriteLine($"Unable to logon to Steam: {obj.Result} / {obj.ExtendedResult}");
+                loginStatus = LOGIN_STATUS.FAIL;
                 return;
             }
 
             while(friends.GetPersonaName() == null) { }
-            Console.WriteLine("Successfully logged into steam! Welcome, " + friends.GetPersonaName());
+            Debug.WriteLine("Successfully logged into steam! Welcome, " + friends.GetPersonaName());
+            loginStatus = LOGIN_STATUS.SUCCESS;
+            CloseLogin();
+
+            steamID = obj.ClientSteamID;
+        }
+
+        public bool RequestGames()
+        {
+            if (steamID == null) return false;
 
             CPlayer_GetOwnedGames_Request req = new CPlayer_GetOwnedGames_Request()
             {
-                steamid = obj.ClientSteamID,
+                steamid = steamID,
                 include_free_sub = false,
                 include_appinfo = true,
             };
             gameRequest = servicePlayer.SendMessage(x => x.GetOwnedGames(req));
+
+            return true;
         }
 
         void OnMethodResponse(SteamUnifiedMessages.ServiceMethodResponse callback)
@@ -149,18 +204,20 @@ namespace plugin
                         
             if (callback.Result != EResult.OK)
             {
-                Console.WriteLine($"Request failed with {callback.Result}");
+                Debug.WriteLine($"Request failed with {callback.Result}");
                 return;
             }
+
+            cancelCallbackTok.Cancel();
 
             var resp = callback.GetDeserializedResponse<CPlayer_GetOwnedGames_Response>();
 
             Console.BackgroundColor = ConsoleColor.Cyan;
             Console.ForegroundColor = ConsoleColor.Black;
             /*
-            Console.WriteLine($"You own {resp.game_count} games!");
+            Debug.WriteLine($"You own {resp.game_count} games!");
             Console.ResetColor();
-            Console.WriteLine("Press any key to list them.");
+            Debug.WriteLine("Press any key to list them.");
             Console.ReadKey();*/
             int existing = 0;
             foreach (var game in resp.games)
@@ -179,11 +236,11 @@ namespace plugin
                 });
 
                 Library.AddGameEntry(game.name, entry);
-                //Console.WriteLine($"{game.name} ({game.appid}) Playtime: {game.playtime_forever / 60}hrs");
+                //Debug.WriteLine($"{game.name} ({game.appid}) Playtime: {game.playtime_forever / 60}hrs");
             }
 
             Library.SaveChanges();
-            Console.WriteLine($"Added { resp.game_count - existing } games to your library.");
+            Debug.WriteLine($"Added { resp.game_count - existing } games to your library.");
 
             gameRequest = JobID.Invalid;
         }
@@ -207,14 +264,13 @@ namespace plugin
                 if (type != "game" && type != "demo") return;
 
                 string name = app.Value<string>("name");
-                Console.WriteLine($"{name} ({appid}) Playtime: {playtime_forever / 60}hrs");
+                Debug.WriteLine($"{name} ({appid}) Playtime: {playtime_forever / 60}hrs");
             }
         }
 
         private void OnDisconnected(SteamClient.DisconnectedCallback obj)
         {
-            Console.WriteLine("Disconnected. Reconnecting... ");
-            client.Connect();
+            Debug.WriteLine("Disconnected from Steam");
         }
 
         private void OnConnected(SteamClient.ConnectedCallback obj)
@@ -224,25 +280,45 @@ namespace plugin
                 username = UserConfig.GetValue<string>(PluginDLL.CONFIG_FILE, "username");
                 savedLogin = UserConfig.GetValue<string>(PluginDLL.CONFIG_FILE, "saved_login");
             }
-            else if(username == null || savedLogin == null)
+            else if(username == null)
             {
-                Console.Write("Username: ");
-                username = Console.ReadLine();
-                Console.Write("Password: ");
-                password = Console.ReadLine();
+                Debug.WriteLine($"No saved login. Manual login required.");
+                ShowLogin(AUTH_MODE.NONE, null);
+                return;
             }
 
-            Console.WriteLine("Connected to Steam! Logging in as '{0}'...", username);
+            Debug.WriteLine($"Connected to Steam! Logging in as '{username}'...");
             user.LogOn(new SteamUser.LogOnDetails
             {
                 Username = username,
                 Password = password,
 
-                AuthCode = emailAuth,
-                TwoFactorCode = appAuth,
+                AuthCode = emailCode,
+                TwoFactorCode = authCode,
 
                 LoginKey = savedLogin,
                 ShouldRememberPassword = true,
+            });
+        }
+
+        public void ShowLogin(AUTH_MODE auth, string error)
+        {
+            if (background) return;
+
+            Application.Current.Dispatcher.Invoke((Action)delegate {
+                if (loginWindow == null) loginWindow = new Login();
+                loginWindow.UpdateStage(auth, error);
+                loginWindow.Show();
+            });
+        }
+
+        public void CloseLogin()
+        {
+            if (background) return;
+
+            Application.Current.Dispatcher.Invoke((Action)delegate {
+                if (loginWindow != null)
+                    loginWindow.Close();
             });
         }
     }

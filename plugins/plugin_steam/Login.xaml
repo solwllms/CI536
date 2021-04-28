@@ -1,0 +1,24 @@
+﻿<Window x:Class="CI536.Login"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CI536"
+        mc:Ignorable="d"
+        Title="Login to Steam" Height="416.667" Width="311.111" ResizeMode="NoResize" Background="#FF1B2838">
+    <Grid Width="300">
+        <Button Content="Login to Steam" HorizontalAlignment="Center" Margin="0,227,0,0" VerticalAlignment="Top" Width="109" Click="Button_Click" IsDefault="True"/>
+        <Canvas Margin="0,93,0,189" HorizontalAlignment="Center" Width="221">
+            <TextBox x:Name="txt_username" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="132" Canvas.Left="85" Canvas.Top="4"/>
+            <PasswordBox x:Name="txt_password" HorizontalAlignment="Left" VerticalAlignment="Top" Width="132" Canvas.Left="85" Canvas.Top="31"/>
+            <Label Content="Username" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White"/>
+            <Label Content="Password" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Canvas.Top="27"/>
+            <Label x:Name="lbl_auth" Content="SteamGuard" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Canvas.Top="80"/>
+            <TextBox x:Name="txt_auth" CharacterCasing="Upper" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="132" Canvas.Left="85" Canvas.Top="84"/>
+        </Canvas>
+        <Label x:Name="lbl_error" Content="No error!" HorizontalAlignment="Center" Margin="0,252,0,0" VerticalAlignment="Top" Foreground="Red" Width="285" HorizontalContentAlignment="Center"/>
+        <Image Height="39" VerticalAlignment="Top" Source="/steam_logo.png" Margin="0,35,88,0" IsEnabled="False" HorizontalAlignment="Right" Width="124"/>
+        <Label Content="Gamerack does not hold your data.&#xA;Your login info will be sent as encrypted data to&#xD;&#xA;Steam servers." HorizontalAlignment="Center" Margin="0,309,0,0" VerticalAlignment="Top" Foreground="White" Width="285" Height="60" HorizontalContentAlignment="Center"/>
+
+    </Grid>
+</Window>

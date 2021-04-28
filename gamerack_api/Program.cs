@@ -49,7 +49,12 @@ namespace CI536
                     else
                     {
                         Console.WriteLine("Loading: " + path);
-                        plugin.Init();
+                        Task setup = new Task(async () =>
+                        {
+                            bool loaded = await plugin.Load();
+                            await plugin.Sync();
+                        });
+                        setup.Start();
                         plugins.Add(plugin);
 
                         Console.WriteLine("Registered: " + plugin.getName());
