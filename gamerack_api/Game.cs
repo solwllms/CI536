@@ -9,12 +9,19 @@ namespace CI536
     public class GameEntry
     {
         public string Title { get; set; }
-        public string Developer { get; set; }
+        public List<string> Developers { get; set; }
+        public List<string> Publishers { get; set; }
+        public string Summary { get; set; }
+        public int ReleaseYear { get; set; }
+        public string BoxArt { get; set; }
         public Dictionary<string, LaunchConfig> Configs { get; set; }
 
         public GameEntry()
         {
+            Developers = new List<string>();
+            Publishers = new List<string>();
             Configs = new Dictionary<string, LaunchConfig>();
+            ReleaseYear = -1;
         }
 
         public void AddConfig(LaunchConfig config)

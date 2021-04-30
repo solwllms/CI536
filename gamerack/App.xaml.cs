@@ -17,6 +17,7 @@ namespace CI536
 		{
 			UserConfig.Init();
 			Library.Init();
+			Metadata.Init();
 
 			Plugins.LoadPlugins();
 

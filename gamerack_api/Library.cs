@@ -56,7 +56,7 @@ namespace CI536
 
         public static GameEntry GetGameEntry(string title)
         {
-            title = title.Trim().ToLower();
+            title = title.Trim().ToLower().ToSlug();
 
             if (collection == null || !collection.ContainsKey(title)) return null;
             return collection[title];
@@ -64,7 +64,7 @@ namespace CI536
 
         public static bool HasGameEntry(string title)
         {
-            title = title.Trim().ToLower();
+            title = title.Trim().ToLower().ToSlug();
 
             if (collection == null || !collection.ContainsKey(title)) return false;
             return true;
@@ -72,7 +72,7 @@ namespace CI536
 
         public static bool RemoveGameEntry(string title)
         {
-            title = title.Trim().ToLower();
+            title = title.Trim().ToLower().ToSlug();
 
             if (collection == null || !collection.ContainsKey(title)) return false;
             collection.Remove(title);
@@ -81,7 +81,7 @@ namespace CI536
 
         public static GameEntry AddGameEntry(string title, GameEntry entry)
         {
-            title = title.Trim().ToLower();
+            title = title.Trim().ToLower().ToSlug();
 
             if (collection == null || collection.ContainsKey(title)) return collection[title];
             collection.Add(title, entry);

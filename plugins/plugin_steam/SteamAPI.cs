@@ -214,11 +214,9 @@ namespace plugin
 
             Console.BackgroundColor = ConsoleColor.Cyan;
             Console.ForegroundColor = ConsoleColor.Black;
-            /*
-            Debug.WriteLine($"You own {resp.game_count} games!");
-            Console.ResetColor();
-            Debug.WriteLine("Press any key to list them.");
-            Console.ReadKey();*/
+
+            List<string> titles = new List<string>();
+
             int existing = 0;
             foreach (var game in resp.games)
             {
@@ -235,14 +233,32 @@ namespace plugin
                     LaunchCommand = $"steam://rungameid/{game.appid}"
                 });
 
+                titles.Add(game.name);
                 Library.AddGameEntry(game.name, entry);
                 //Debug.WriteLine($"{game.name} ({game.appid}) Playtime: {game.playtime_forever / 60}hrs");
             }
 
             Library.SaveChanges();
             Debug.WriteLine($"Added { resp.game_count - existing } games to your library.");
+            Console.ResetColor();
 
             gameRequest = JobID.Invalid;
+
+            Task.Run(async () =>
+            {
+                Console.WriteLine("Doing metadata fetch.. 0%");
+                float pc = ((float)titles.Count() / 10) / 100;
+                int i = 1;
+                var chunks = titles.Split(10);
+                foreach (var chunk in chunks)
+                {
+                    await Metadata.PopulateGames(chunk.ToArray());
+                    Console.WriteLine($"{Math.Floor(i * pc)}%");
+                    i++;
+                    Thread.Sleep(1500);
+                }
+                Console.WriteLine("100% - got all metadata!");
+            });
         }
 
         private void PrintAppInfo(int appid, int playtime_forever)
