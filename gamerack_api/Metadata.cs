@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CI536
@@ -25,7 +26,29 @@ namespace CI536
             //PopulateGames(new string[] { "Call of Duty 4: Modern Warfare", "Quake" });
         }
 
-        public static async Task PopulateGames(string[] titles)
+        public static async Task PopulateGames(List<string> titles)
+        {
+            if (titles.Count == 0)
+            {
+                Console.WriteLine("No metadata to fetch!");
+                return;
+            }
+
+            Console.WriteLine("Doing metadata fetch.. 0%");
+            float pc = ((float)titles.Count() / 10) / 100;
+            int i = 1;
+            var chunks = titles.Split(10);
+            foreach (var chunk in chunks)
+            {
+                await populateGames(chunk.ToArray());
+                Console.WriteLine($"{Math.Floor(i * pc)}%");
+                i++;
+                Thread.Sleep(1500);
+            }
+            Console.WriteLine("100% - got all metadata!");
+        }
+
+        private static async Task populateGames(string[] titles)
         {
             await getAccessToken();
 

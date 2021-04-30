@@ -244,21 +244,7 @@ namespace plugin
 
             gameRequest = JobID.Invalid;
 
-            Task.Run(async () =>
-            {
-                Console.WriteLine("Doing metadata fetch.. 0%");
-                float pc = ((float)titles.Count() / 10) / 100;
-                int i = 1;
-                var chunks = titles.Split(10);
-                foreach (var chunk in chunks)
-                {
-                    await Metadata.PopulateGames(chunk.ToArray());
-                    Console.WriteLine($"{Math.Floor(i * pc)}%");
-                    i++;
-                    Thread.Sleep(1500);
-                }
-                Console.WriteLine("100% - got all metadata!");
-            });
+            _ = Metadata.PopulateGames(titles);
         }
 
         private void PrintAppInfo(int appid, int playtime_forever)
