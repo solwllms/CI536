@@ -54,6 +54,17 @@ namespace CI536
             File.WriteAllText(libraryPath, json);
         }
 
+        public static IEnumerable<KeyValuePair<string, GameEntry>> GetAllEntires()
+        {
+            if (collection == null) return null;
+            return collection;
+        }
+        public static IEnumerable<KeyValuePair<string, GameEntry>> GetEntiresSearch(string search)
+        {
+            if (collection == null || search == null || String.IsNullOrEmpty(search)) return null;
+            return collection.Where(e => e.Value.Title.ToLower().Contains(search.Trim().ToLower()));
+        }
+
         public static GameEntry GetGameEntry(string title)
         {
             title = title.Trim().ToLower().ToSlug();
