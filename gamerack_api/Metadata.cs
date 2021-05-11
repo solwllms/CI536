@@ -15,7 +15,6 @@ namespace CI536
         // TODO: move these to env variables at some point!
         private const string client_id = "vzzhw04og482t4cftxngi003tcqs0g";
         private const string client_secret = "l57t9qfnkfxz9ipo4k8ewe031faj06";
-        private static string access_token;
 
         private static HttpClient client;
 
@@ -53,7 +52,7 @@ namespace CI536
             await getAccessToken();
 
             string title_search = string.Join("\",\"", titles).ToSafeString();
-            string request = $"fields name, summary, cover.url, involved_companies.*, involved_companies.company.name, release_dates.y; where platforms !=n & platforms = [6] & name = (\"{title_search}\");";
+            string request = $"fields name, summary, cover.url, screenshots.url, involved_companies.*, involved_companies.company.name, release_dates.y; where platforms !=n & platforms = [6] & name = (\"{title_search}\");";
 
             string body = await postRequest($"https://api.igdb.com/v4/games/", request);
             if (body == null)
@@ -102,6 +101,16 @@ namespace CI536
                     }
                     else earliest_release = -1;
 
+                    List<string> media = new List<string>();
+                    if (game.ContainsKey("screenshots"))
+                    {
+                        foreach (JObject screenshot in game["screenshots"])
+                        {
+                            if (screenshot.ContainsKey("url"))
+                                media.Add("http:" + ((string)screenshot["url"]).Replace("t_thumb", "t_1080p"));
+                        }
+                    }
+
                     /*
                     Console.WriteLine($"Title: {name} ({earliest_release})");
                     Console.WriteLine("Developers: " + string.Join(", ", developers));
@@ -115,6 +124,7 @@ namespace CI536
                     entry.Summary = summary;
                     entry.ReleaseYear = earliest_release;
                     entry.BoxArt = coverurl;
+                    entry.Media = media;
                 }
                 catch (Exception e)
                 {

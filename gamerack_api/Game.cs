@@ -14,12 +14,14 @@ namespace CI536
         public string Summary { get; set; }
         public int ReleaseYear { get; set; }
         public string BoxArt { get; set; }
+        public List<string> Media { get; set; }
         public Dictionary<string, LaunchConfig> Configs { get; set; }
 
         public GameEntry()
         {
             Developers = new List<string>();
             Publishers = new List<string>();
+            Media = new List<string>();
             Configs = new Dictionary<string, LaunchConfig>();
             ReleaseYear = -1;
         }

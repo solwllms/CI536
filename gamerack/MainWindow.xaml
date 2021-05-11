@@ -5,10 +5,68 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CI536"
         mc:Ignorable="d"
-        Title="Gamerack" Height="450" Width="800">
-    <Grid>
-        <Button x:Name="btn_login" Content="Login to Steam" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="109" Click="Button_Login"/>
-        <Button x:Name="btn_sync" Content="Sync Steam Library" HorizontalAlignment="Left" Margin="137,10,0,0" VerticalAlignment="Top" Width="109" Click="Button_Sync"/>
+        Title="Gamerack" Width="1280" Height="720"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        ui:WindowHelper.UseModernWindowStyle="True">
+    <DockPanel>
+        <ui:NavigationView
+            Canvas.ZIndex="1"
+            x:Name="NavView"
+            IsBackButtonVisible="Collapsed"
+            IsPaneToggleButtonVisible="True"
+            PaneDisplayMode="LeftMinimal"
+            IsSettingsVisible="False"
+            OpenPaneLength="315">
+            <ui:NavigationView.MenuItems>
+                <ui:NavigationViewItem Content="Import game/library" Icon="Sync"/>
+                <ui:NavigationViewItemSeparator/>
+                <ui:NavigationViewItem Content="Settings" Icon="Setting"/>
+                <ui:NavigationViewItem Content="About" Icon="Comment"/>
+            </ui:NavigationView.MenuItems>
 
-    </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="315"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <DockPanel Grid.Column="0" Margin="0,40,0,0">
+                    <Button DockPanel.Dock="Top"
+                            HorizontalAlignment="Stretch" Margin="12,0" HorizontalContentAlignment="Left" Click="HomeButton_Click">
+                        <DockPanel Margin="0">
+                            <ui:SymbolIcon
+                                    Symbol="Home"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    Width="20"
+                                    Height="20"
+                                    Margin="5,0,10,0" />
+                            <TextBlock
+                                    Text="Home"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center" />
+                        </DockPanel>
+                    </Button>
+                    <ui:AutoSuggestBox
+                        x:Name="controlsSearchBox"
+                        DockPanel.Dock="Top"
+                        Margin="12"
+                        PlaceholderText="Search"
+                        QueryIcon="Find"
+                        TextChanged="Search_GamesList_Reset"
+                        QuerySubmitted="Search_GamesList"/>
+                    <ListView x:Name="lvGames" Margin="12,0" Padding="0">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <EventSetter Event="PreviewMouseLeftButtonDown" Handler="GamesList_LeftButtonDown" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+                </DockPanel>
+                <ui:Frame Grid.Column="1" x:Name="ContentFrame"/>
+            </Grid>
+        </ui:NavigationView>
+        <!--
+        <Button x:Name="btn_login" Grid.Column="0" Content="Login to Steam" Width="139" Click="Button_Login"/>
+        <Button x:Name="btn_sync" Grid.Column="0" Content="Sync Steam Library" Width="139" Click="Button_Sync"/> -->
+    </DockPanel>
 </Window>
