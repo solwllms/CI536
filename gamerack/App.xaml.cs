@@ -15,6 +15,9 @@ namespace CI536
     {
 		private void Application_Startup(object sender, StartupEventArgs e)
 		{
+			Splash splash = new Splash();
+			splash.Show();
+
 			UserConfig.Init();
 			Library.Init();
 			Metadata.Init();
@@ -22,6 +25,7 @@ namespace CI536
 			Plugins.LoadPlugins();
 
 			MainWindow wnd = new MainWindow();
+			splash.Hide();
 			wnd.Show();
 		}
 	}

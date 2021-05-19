@@ -16,6 +16,7 @@ namespace CI536
         public string BoxArt { get; set; }
         public List<string> Media { get; set; }
         public Dictionary<string, LaunchConfig> Configs { get; set; }
+        public string SelectedConfig { get; set; }
 
         public GameEntry()
         {
@@ -28,7 +29,11 @@ namespace CI536
 
         public void AddConfig(LaunchConfig config)
         {
-            Configs.Add(Guid.NewGuid().ToString(), config);
+            string uuid = Guid.NewGuid().ToString();
+            Configs.Add(uuid, config);
+
+            if (SelectedConfig == null)
+                SelectedConfig = uuid;
         }
 
         public bool RemoveConfig(string uuid)
@@ -44,6 +49,20 @@ namespace CI536
         public void RemoveAllConfigs()
         {
             Configs.Clear();
+        }
+
+        public bool Launch(string configUUID = null)
+        {
+            if (configUUID == null)
+                configUUID = SelectedConfig;
+
+            if (configUUID == null) return false;
+            if (Configs.ContainsKey(configUUID))
+            {
+                System.Diagnostics.Process.Start(Configs[configUUID].LaunchCommand, Configs[configUUID].LaunchArguments);
+                return true;
+            }
+            return false;
         }
     }
 

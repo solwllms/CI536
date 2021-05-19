@@ -16,12 +16,13 @@
             IsPaneToggleButtonVisible="True"
             PaneDisplayMode="LeftMinimal"
             IsSettingsVisible="False"
+            ItemInvoked="NavView_ItemInvoked"
             OpenPaneLength="315">
             <ui:NavigationView.MenuItems>
-                <ui:NavigationViewItem Content="Import game/library" Icon="Sync"/>
+                <ui:NavigationViewItem Content="Import game/library" Icon="Sync" Tag=""/>
                 <ui:NavigationViewItemSeparator/>
-                <ui:NavigationViewItem Content="Settings" Icon="Setting"/>
-                <ui:NavigationViewItem Content="About" Icon="Comment"/>
+                <ui:NavigationViewItem Content="Settings" Icon="Setting" Tag="{x:Type local:SettingsPage}" />
+                <ui:NavigationViewItem Content="About" Icon="Comment" Tag=""/>
             </ui:NavigationView.MenuItems>
 
             <Grid>
@@ -29,9 +30,9 @@
                     <ColumnDefinition Width="315"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <DockPanel Grid.Column="0" Margin="0,40,0,0">
+                <DockPanel Grid.Column="0" Background="{DynamicResource NavigationViewExpandedPaneBackground}">
                     <Button DockPanel.Dock="Top"
-                            HorizontalAlignment="Stretch" Margin="12,0" HorizontalContentAlignment="Left" Click="HomeButton_Click">
+                            HorizontalAlignment="Stretch" Margin="12,50,12,0" HorizontalContentAlignment="Left" Click="HomeButton_Click">
                         <DockPanel Margin="0">
                             <ui:SymbolIcon
                                     Symbol="Home"
@@ -54,7 +55,7 @@
                         QueryIcon="Find"
                         TextChanged="Search_GamesList_Reset"
                         QuerySubmitted="Search_GamesList"/>
-                    <ListView x:Name="lvGames" Margin="12,0" Padding="0">
+                    <ListView x:Name="lvGames" Margin="12,0" Padding="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <EventSetter Event="PreviewMouseLeftButtonDown" Handler="GamesList_LeftButtonDown" />
@@ -65,8 +66,5 @@
                 <ui:Frame Grid.Column="1" x:Name="ContentFrame"/>
             </Grid>
         </ui:NavigationView>
-        <!--
-        <Button x:Name="btn_login" Grid.Column="0" Content="Login to Steam" Width="139" Click="Button_Login"/>
-        <Button x:Name="btn_sync" Grid.Column="0" Content="Sync Steam Library" Width="139" Click="Button_Sync"/> -->
     </DockPanel>
 </Window>

@@ -29,6 +29,27 @@ namespace CI536
             lblTitle.Content = entry.Title;
             if(entry.Media.Count > 0)
                 imgHeader.Source = WPFUtil.GetImageFromURL(entry.Media[0]);
+
+            lblSummary.Text = entry.Summary;
+            if (entry.Developers.Count == 0)
+                lblDev.Content = "Unknown";
+            else
+                lblDev.Content = string.Join("\n", entry.Developers);
+
+            if (entry.Publishers.Count == 0)
+                lblPub.Content = "Unknown";
+            else
+                lblPub.Content = string.Join("\n", entry.Publishers);
+
+            if (entry.ReleaseYear < 0)
+                lblRel.Content = "Unknown";
+            else
+                lblRel.Content = entry.ReleaseYear;
+        }
+
+        private void ButtonPlay_Click(object sender, RoutedEventArgs e)
+        {
+            entry.Launch();
         }
     }
 }

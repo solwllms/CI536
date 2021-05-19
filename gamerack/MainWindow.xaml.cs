@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ModernWpf.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -37,9 +38,14 @@ namespace CI536
             lvGames.Items.Refresh();
         }
 
+        private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+        {
+            Navigate(Activator.CreateInstance((Type)args.InvokedItemContainer.Tag));
+        }
+
         private void GamesList_LeftButtonDown(object sender, RoutedEventArgs e)
         {
-            var item = sender as ListViewItem;
+            var item = sender as System.Windows.Controls.ListViewItem;
             if (item != null && item.IsSelected)
             {
                 GameListEntry entry = (GameListEntry)item.Content;
@@ -49,26 +55,23 @@ namespace CI536
 
         void ShowHome()
         {
-            if (ContentFrame.Content?.GetType() == typeof(HomePage)) return;
-            ContentFrame.Navigate(new HomePage());
+            Navigate(new HomePage());
         }
 
         public void ShowGameDetails(string slug)
         {
             GameEntry entry = Library.GetGameEntry(slug);
             if (entry == null) return;
-            //ctrlMain.Content = new GameDetails(entry);
-            ContentFrame.Navigate(new GameDetails(entry));
+            NavView.SelectedItem = null;
+            Navigate(new GameDetails(entry), true);
         }
 
-        private void Button_Login(object sender, RoutedEventArgs e)
+        void Navigate(object page, bool bypass = false)
         {
-            Plugins.GetPlugin("steam").Authenticate();
-        }
-
-        private void Button_Sync(object sender, RoutedEventArgs e)
-        {
-            Plugins.GetPlugin("steam").Sync();
+            if (ContentFrame.CurrentSourcePageType != page.GetType() || bypass)
+            {
+                ContentFrame.Navigate(page);
+            }
         }
 
         private void Search_GamesList(ModernWpf.Controls.AutoSuggestBox sender, ModernWpf.Controls.AutoSuggestBoxQuerySubmittedEventArgs args)
