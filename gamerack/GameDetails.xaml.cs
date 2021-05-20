@@ -47,8 +47,8 @@ namespace CI536
                 lblRel.Content = entry.ReleaseYear;
 
             pnlPlaytime.Visibility = entry.PlaytimeTotalMins == -1 ? Visibility.Collapsed : Visibility.Visible;
-            lblTotalPlaytime.Content = (entry.PlaytimeTotalMins / 60) + " hrs";
-            lblRecentPlaytime.Content = (entry.PlaytimeFortnightMins / 60) + " hrs";
+            lblTotalPlaytime.Content = ((float)entry.PlaytimeTotalMins / 60).ToString("0.0") + " hrs";
+            lblRecentPlaytime.Content = ((float)entry.PlaytimeFortnightMins / 60).ToString("0.0") + " hrs";
         }
 
         private void ButtonPlay_Click(object sender, RoutedEventArgs e)
