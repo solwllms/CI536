@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CI536"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="720" d:DesignWidth="1280">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -22,6 +22,26 @@
                     <ColumnDefinition Width="3*"/>
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Margin="10">
+                    <Border Background="#262626" CornerRadius="7" DockPanel.Dock="Top" Padding="20">
+                        <Grid x:Name="pnlPlaytime">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Grid.Row="0" FontWeight="Bold" Content="Statistics"  Margin="0,0,0,10"/>
+                            <Label Grid.Column="0" Grid.Row="1" Content="Total Playtime"/>
+                            <Label x:Name="lblTotalPlaytime" Grid.Column="1" Grid.Row="1" Content="xx hrs" HorizontalAlignment="Right"/>
+                            <Label Grid.Column="0" Grid.Row="2" Content="Recent Playtime"/>
+                            <Label x:Name="lblRecentPlaytime" Grid.Column="1" Grid.Row="2" Content="xx hrs" HorizontalAlignment="Right"/>
+                        </Grid>
+                    </Border>
+                </StackPanel>
                 <StackPanel Grid.Column="1" Margin="10">
                     <TextBlock x:Name="lblSummary" TextWrapping="Wrap" Text="Summary" Foreground="White" VerticalAlignment="Top" Margin="0,0,0,10"/>
                     <Grid Margin="0,0,0,10">

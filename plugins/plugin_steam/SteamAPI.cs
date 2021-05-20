@@ -220,22 +220,34 @@ namespace plugin
             int existing = 0;
             foreach (var game in resp.games)
             {
+                GameEntry entry;
                 if (Library.HasGameEntry(game.name))
                 {
+                    // update a existing entry
+                    entry = Library.GetGameEntry(game.name);
+                    entry.PlaytimeTotalMins = game.playtime_forever;
+                    entry.PlaytimeFortnightMins = game.playtime_2weeks;
+
                     //TODO: we should add a config here too tho!
                     existing++;
-                    continue;
                 }
-                GameEntry entry = new GameEntry();
-                entry.Title = game.name;
-                entry.AddConfig(new LaunchConfig(){
-                    Type = "steam",
-                    LaunchCommand = $"steam://rungameid/{game.appid}"
-                });
+                else
+                {
+                    // add a new entry
+                    entry = new GameEntry();
+                    entry.Title = game.name;
+                    entry.PlaytimeTotalMins = game.playtime_forever;
+                    entry.PlaytimeFortnightMins = game.playtime_2weeks;
+                    entry.AddConfig(new LaunchConfig()
+                    {
+                        Type = "steam",
+                        LaunchCommand = $"steam://rungameid/{game.appid}"
+                    });
 
-                titles.Add(game.name);
-                Library.AddGameEntry(game.name, entry);
-                //Debug.WriteLine($"{game.name} ({game.appid}) Playtime: {game.playtime_forever / 60}hrs");
+                    titles.Add(game.name);
+                    Library.AddGameEntry(game.name, entry);
+                    //Debug.WriteLine($"{game.name} ({game.appid}) Playtime: {game.playtime_forever / 60}hrs");
+                }
             }
 
             Library.SaveChanges();

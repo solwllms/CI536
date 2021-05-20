@@ -13,6 +13,8 @@ namespace CI536
         public List<string> Publishers { get; set; }
         public string Summary { get; set; }
         public int ReleaseYear { get; set; }
+        public int PlaytimeTotalMins { get; set; }
+        public int PlaytimeFortnightMins { get; set; }
         public string BoxArt { get; set; }
         public List<string> Media { get; set; }
         public Dictionary<string, LaunchConfig> Configs { get; set; }
@@ -24,6 +26,8 @@ namespace CI536
             Publishers = new List<string>();
             Media = new List<string>();
             Configs = new Dictionary<string, LaunchConfig>();
+            PlaytimeTotalMins = -1;
+            PlaytimeFortnightMins = -1;
             ReleaseYear = -1;
         }
 
