@@ -6,19 +6,18 @@
         xmlns:local="clr-namespace:CI536"
         mc:Ignorable="d"
         Title="Splash"
+        Background="Transparent"
         WindowStartupLocation="CenterScreen"
-        WindowStyle="None"
-        AllowsTransparency="True"
-        Height="206.826"
-        Width="531.043">
-    <Grid>
-        <Grid.Background>
+        Height="200"
+        Width="530" AllowsTransparency="True" WindowStyle="None">
+    <Border CornerRadius="15" DockPanel.Dock="Top" Padding="10">
+        <Border.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                 <GradientStop Color="#FF602C8E" Offset="1"/>
                 <GradientStop Color="#FF9132AE"/>
             </LinearGradientBrush>
-        </Grid.Background>
-        <Image Source="fulllock-white.png" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20,79"/>
+        </Border.Background>
+        <Image Source="fulllock-white.png" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" VerticalAlignment="Center" Height="70" Width="440"/>
 
-    </Grid>
+    </Border>
 </Window>
