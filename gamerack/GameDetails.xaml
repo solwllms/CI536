@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:CI536"
+             xmlns:local="clr-namespace:CI536" xmlns:ui="http://schemas.modernwpf.com/2019"
              mc:Ignorable="d" 
              d:DesignHeight="720" d:DesignWidth="1280">
     <UserControl.Resources>
@@ -26,7 +26,15 @@
             <Image x:Name="imgHeader" Grid.Row="0" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             <DockPanel Grid.Row="1" Margin="20,20,20,20">
                 <Label x:Name="lblTitle" Foreground="White" Content="Game title" VerticalAlignment="Center" FontSize="36" FontWeight="Bold"/>
-                <Button Content="Play" Width="300" Height="50" HorizontalAlignment="Right" Click="ButtonPlay_Click" Style="{DynamicResource AccentButtonStyle}"/>
+                <Button DockPanel.Dock="Right" Height="50" HorizontalAlignment="Right" Click="ButtonPlay_Click">
+                    <ui:SymbolIcon
+                                    Symbol="Setting"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    Width="20"
+                                    Height="20"/>
+                </Button>
+                <Button Content="Play" Margin="0,0,5,0" Width="260" Height="50" HorizontalAlignment="Right" Click="ButtonPlay_Click" Style="{DynamicResource AccentButtonStyle}"/>
             </DockPanel>
             <Grid Grid.Row="2" Margin="20,0,20,0">
                 <Grid.ColumnDefinitions>
@@ -99,7 +107,14 @@
                         <Label Grid.Column="0" Grid.Row="2" FontWeight="Bold" Content="Released"/>
                         <Label x:Name="lblRel"  Grid.Column="1" Grid.Row="2" Margin="0,0,0,10"/>
                     </Grid>
-                    <Button Content="Edit" VerticalAlignment="Top" HorizontalAlignment="Stretch" Click="EditInfo_Click"/>
+                    <Button VerticalAlignment="Top" HorizontalAlignment="Right" Click="EditInfo_Click">
+                        <ui:SymbolIcon
+                            Symbol="Edit"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Width="20"
+                            Height="20"/>
+                    </Button>
                 </StackPanel>
             </Grid>
         </Grid>

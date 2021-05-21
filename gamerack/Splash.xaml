@@ -8,16 +8,17 @@
         Title="Splash"
         Background="Transparent"
         WindowStartupLocation="CenterScreen"
+        UseLayoutRounding="True"
         Height="200"
         Width="530" AllowsTransparency="True" WindowStyle="None">
     <Border CornerRadius="15" DockPanel.Dock="Top" Padding="10">
         <Border.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                <GradientStop Color="#FF602C8E" Offset="1"/>
-                <GradientStop Color="#FF9132AE"/>
+                <GradientStop Color="#0078d7" Offset="1"/>
+                <GradientStop Color="#1f547e"/>
             </LinearGradientBrush>
         </Border.Background>
-        <Image Source="fulllock-white.png" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" VerticalAlignment="Center" Height="70" Width="440"/>
+        <Image Source="wordmark-white.png" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" VerticalAlignment="Center" Height="60" Width="440"/>
 
     </Border>
 </Window>
