@@ -6,42 +6,79 @@
              xmlns:local="clr-namespace:CI536"
              mc:Ignorable="d" 
              d:DesignHeight="720" d:DesignWidth="1280">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Image x:Name="imgHeader" Grid.Row="0" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <DockPanel Grid.Row="1" Margin="20">
-            <Label x:Name="lblTitle" Foreground="White" Content="Game title" VerticalAlignment="Center" FontSize="36" FontWeight="Bold"/>
-            <Button Content="Play" Width="300" Height="50" HorizontalAlignment="Right" Click="ButtonPlay_Click" Style="{DynamicResource AccentButtonStyle}"/>
-        </DockPanel>
-        <ScrollViewer Grid.Row="2" Margin="20,0,20,0">
-            <Grid>
+    <UserControl.Resources>
+        <DataTemplate x:Key="MediaEntry">
+            <Border CornerRadius="7">
+                <Border.Background>
+                    <ImageBrush Stretch="Fill" ImageSource="{Binding}" />
+                </Border.Background>
+                <Image Source="{Binding}" Stretch="Uniform" Margin="0" Height="Auto" Visibility="Hidden"/>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+    <ScrollViewer>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="450px"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Image x:Name="imgHeader" Grid.Row="0" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <DockPanel Grid.Row="1" Margin="20,20,20,20">
+                <Label x:Name="lblTitle" Foreground="White" Content="Game title" VerticalAlignment="Center" FontSize="36" FontWeight="Bold"/>
+                <Button Content="Play" Width="300" Height="50" HorizontalAlignment="Right" Click="ButtonPlay_Click" Style="{DynamicResource AccentButtonStyle}"/>
+            </DockPanel>
+            <Grid Grid.Row="2" Margin="20,0,20,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="3*"/>
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                    <Border Background="#262626" CornerRadius="7" DockPanel.Dock="Top" Padding="20">
-                        <Grid x:Name="pnlPlaytime">
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Grid.Row="0" FontWeight="Bold" FontSize="18" Content="Statistics"  Margin="0,0,0,5"/>
-                            <Label Grid.Column="0" Grid.Row="1" Content="Total Playtime"/>
-                            <Label x:Name="lblTotalPlaytime" Grid.Column="1" Grid.Row="1" Content="xx hrs" HorizontalAlignment="Right"/>
-                            <Label Grid.Column="0" Grid.Row="2" Content="Recent Playtime"/>
-                            <Label x:Name="lblRecentPlaytime" Grid.Column="1" Grid.Row="2" Content="xx hrs" HorizontalAlignment="Right"/>
-                        </Grid>
-                    </Border>
+                <StackPanel>
+                    <StackPanel Grid.Column="0" Margin="0,0,10,10">
+                        <Border Background="#262626" CornerRadius="7" DockPanel.Dock="Top" Padding="20">
+                            <Grid x:Name="pnlPlaytime">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Grid.Row="0" FontWeight="Bold" FontSize="18" Content="Statistics"  Margin="0,0,0,5"/>
+                                <Label Grid.Column="0" Grid.Row="1" Content="Total Playtime"/>
+                                <Label x:Name="lblTotalPlaytime" Grid.Column="1" Grid.Row="1" Content="xx hrs" HorizontalAlignment="Right"/>
+                                <Label Grid.Column="0" Grid.Row="2" Content="Recent Playtime"/>
+                                <Label x:Name="lblRecentPlaytime" Grid.Column="1" Grid.Row="2" Content="xx hrs" HorizontalAlignment="Right"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Grid.Column="0" Margin="0,0,10,10">
+                        <Border CornerRadius="7" DockPanel.Dock="Top" Padding="0,0,0,10">
+                            <StackPanel>
+                                <ListBox Grid.Row="1" Name="MediaList" ItemTemplate="{StaticResource MediaEntry}" Background="Transparent" SelectionMode="Single">
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel HorizontalAlignment="Left"/>
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
+                                    <ListBox.ItemContainerStyle>
+                                        <Style TargetType="ListBoxItem">
+                                            <Setter Property="Margin" Value="0,0,0,10"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="ListBoxItem">
+                                                        <ContentPresenter />
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ListBox.ItemContainerStyle>
+                                </ListBox>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
                 </StackPanel>
                 <StackPanel Grid.Column="1"  Margin="10,0,0,0">
                     <TextBlock x:Name="lblSummary" TextWrapping="Wrap" Text="Summary" Foreground="White" VerticalAlignment="Top" Margin="0,0,0,30"/>
@@ -65,6 +102,6 @@
                     <Button Content="Edit" VerticalAlignment="Top" HorizontalAlignment="Stretch" Click="EditInfo_Click"/>
                 </StackPanel>
             </Grid>
-        </ScrollViewer>
-    </Grid>
+        </Grid>
+    </ScrollViewer>
 </UserControl>

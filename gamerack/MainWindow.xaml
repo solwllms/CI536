@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Gamerack" Width="1280" Height="720"
         xmlns:ui="http://schemas.modernwpf.com/2019"
-        ui:WindowHelper.UseModernWindowStyle="True">
+        ui:WindowHelper.UseModernWindowStyle="True" WindowState="Maximized" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <ContextMenu x:Key="cmButton">
             <MenuItem Header="Play" Click="GameContextMenu_Play" />
@@ -63,7 +63,7 @@
                         QueryIcon="Find"
                         TextChanged="Search_GamesList_Reset"
                         QuerySubmitted="Search_GamesList"/>
-                    <ListView x:Name="lvGames" Margin="12,0" Padding="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListView x:Name="lvGames" Margin="12,0" Padding="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Single">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <EventSetter Event="PreviewMouseLeftButtonDown" Handler="GamesList_LeftButtonDown" />

@@ -21,6 +21,7 @@ namespace CI536
     public partial class GameDetails : UserControl
     {
         GameEntry entry;
+        List<BitmapImage> media;
 
         public GameDetails(string slug)
         {
@@ -47,9 +48,19 @@ namespace CI536
             else
                 lblRel.Content = entry.ReleaseYear;
 
+            // stats
             pnlPlaytime.Visibility = entry.PlaytimeTotalMins == -1 ? Visibility.Collapsed : Visibility.Visible;
             lblTotalPlaytime.Content = ((float)entry.PlaytimeTotalMins / 60).ToString("0.0") + " hrs";
             lblRecentPlaytime.Content = ((float)entry.PlaytimeFortnightMins / 60).ToString("0.0") + " hrs";
+
+            // media
+            media = new List<BitmapImage>();
+            foreach (var url in entry.Media)
+            {
+                media.Add(WPFUtil.GetImageFromURL(url));
+            }
+            MediaList.ItemsSource = media;
+            MediaList.Items.Refresh();
         }
 
         private void ButtonPlay_Click(object sender, RoutedEventArgs e)
