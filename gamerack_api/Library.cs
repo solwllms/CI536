@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,12 @@ namespace CI536
     public class Library
     {
         private const string CONFIG_FILE = "library";
+        private const int MAX_RECENT = 16;
 
         private static string defaultPath;
 
         private static Dictionary<string, GameEntry> collection;
+        private static FixedList<string> recent;
 
         public static void Init()
         {
@@ -37,7 +40,20 @@ namespace CI536
                 string content = reader.ReadToEnd();
                 collection = JsonConvert.DeserializeObject<Dictionary<string, GameEntry>>(content);
 
-                if(collection == null) collection = new Dictionary<string, GameEntry>();
+                if (collection == null) collection = new Dictionary<string, GameEntry>();
+            }
+
+            // load recent
+            recent = new FixedList<string>(MAX_RECENT);
+            if (UserConfig.HasProperty(CONFIG_FILE, "recent"))
+            {
+                foreach (var entry in UserConfig.GetValue<JArray>(CONFIG_FILE, "recent"))
+                {
+                    recent.Enqueue(entry.ToString());
+                }
+            }
+            else {
+                UserConfig.SetValue(CONFIG_FILE, "recent", recent.ToArray());
             }
         }
 
@@ -52,6 +68,20 @@ namespace CI536
             settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             string json = JsonConvert.SerializeObject(collection, Formatting.Indented, settings);
             File.WriteAllText(libraryPath, json);
+
+            UserConfig.SetValue(CONFIG_FILE, "recent", recent.ToArray());
+        }
+
+        public static Dictionary<string, GameEntry> GetRecentGames()
+        {
+            Dictionary<string, GameEntry> dict = new Dictionary<string, GameEntry>();
+            foreach (var key in recent.ToArray())
+            {
+                GameEntry entry = GetGameEntry(key);
+                if (entry == null) continue;
+                dict.Add(key, entry);
+            }
+            return dict;
         }
 
         public static Dictionary<string, GameEntry> GetAllEntires()
@@ -97,7 +127,15 @@ namespace CI536
 
             if (collection == null || collection.ContainsKey(title)) return collection[title];
             collection.Add(title, entry);
+            AddToRecent(title);
             return collection[title];
+        }
+
+        public static void AddToRecent(string title)
+        {
+            title = title.Trim().ToLower().ToSlug();
+            recent.Enqueue(title);
+            UserConfig.SetValue(CONFIG_FILE, "recent", recent.ToArray());
         }
     }
 }

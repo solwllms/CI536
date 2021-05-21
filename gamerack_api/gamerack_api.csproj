@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Debug.cs" />
+    <Compile Include="FixedList.cs" />
     <Compile Include="Metadata.cs" />
     <Compile Include="UserConfig.cs" />
     <Compile Include="Game.cs" />

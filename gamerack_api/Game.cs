@@ -60,6 +60,8 @@ namespace CI536
             if (configUUID == null)
                 configUUID = SelectedConfig;
 
+            Library.AddToRecent(Title);
+
             if (configUUID == null) return false;
             if (Configs.ContainsKey(configUUID))
             {

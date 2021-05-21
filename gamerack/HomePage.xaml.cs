@@ -20,16 +20,31 @@ namespace CI536
     /// </summary>
     public partial class HomePage : UserControl
     {
+        List<GameTileEntry> gamesEntriesRecent;
         List<GameTileEntry> gamesEntries;
 
         public HomePage()
         {
             InitializeComponent();
             gamesEntries = new List<GameTileEntry>();
+            gamesEntriesRecent = new List<GameTileEntry>();
 
             RefreshGamesList(Library.GetAllEntires());
+            RefreshRecentGames(Library.GetRecentGames());
         }
 
+        void RefreshRecentGames(Dictionary<string, GameEntry> games)
+        {
+            gamesEntriesRecent.Clear();
+            if (games == null) return;
+            foreach (var item in games.OrderBy(entry => entry.Value.Title))
+            {
+                gamesEntriesRecent.Add(new GameTileEntry() { Title = item.Value.Title, Cover = item.Value.BoxArt == null ? null : WPFUtil.GetImageFromURL(item.Value.BoxArt), Slug = item.Key });
+            }
+            RecentList.ItemsSource = gamesEntriesRecent;
+            RecentList.Items.Refresh();
+            pnlRecent.Visibility = gamesEntriesRecent.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+        }
         void RefreshGamesList(Dictionary<string, GameEntry> games)
         {
             gamesEntries.Clear();
@@ -42,7 +57,8 @@ namespace CI536
             GamesListTile.Items.Refresh();
             AllGamesTitle.Content = $"All Games ({gamesEntries.Count})";
         }
-        private void GamesListTile_LeftButtonDown(object sender, RoutedEventArgs e)
+
+        private void GameTile_LeftButtonDown(object sender, RoutedEventArgs e)
         {
             var item = sender as ListViewItem;
             if (item != null && item.IsSelected)
