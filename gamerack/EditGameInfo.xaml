@@ -46,8 +46,8 @@
                     <TextBlock Margin="0,0,0,10" TextWrapping="Wrap" Text="Seperate multiple companies with a newline." HorizontalAlignment="Right" Foreground="#FF919191"/>
                     <Separator Margin="0,0,0,10" />
                     <Label FontWeight="Bold" Content="Populate from IGDB"/>
-                    <TextBlock Margin="0,0,0,10" TextWrapping="Wrap" Text="Gamerack can populate this info automatically using IGDB data sources, including cover art, screenshots and other media. The entry's current title is used to find a matching entry. Any existing data will be overwritten."/>
-                    <Button Content="Fetch from IGDB" Margin="0,0,0,10" HorizontalAlignment="Stretch" Click="FetchInfo" VerticalAlignment="Top"/>
+                    <TextBlock Margin="0,0,0,10" TextWrapping="Wrap" Text="Gamerack can populate this info automatically from IGDB data sources, including cover art, screenshots and other media. Any existing data will be overwritten."/>
+                    <Button Content="Search from IGDB" Margin="0,0,0,10" HorizontalAlignment="Stretch" Click="FetchInfo" VerticalAlignment="Top"/>
                 </StackPanel>
                 <Separator Grid.Column="0" Grid.Row="9" Grid.ColumnSpan="2" Margin="0,0,0,10" />
                 <DockPanel Grid.Column="0" Grid.Row="10" Grid.ColumnSpan="2" HorizontalAlignment="Right">
