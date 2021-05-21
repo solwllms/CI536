@@ -15,6 +15,9 @@ namespace CI536
         public static MainWindow instance;
         List<GameListEntry> gamesEntries;
 
+        private string contextMenuSlug;
+        private string currentGameSlug;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -26,11 +29,22 @@ namespace CI536
             RefreshGamesList(Library.GetAllEntires());
         }
 
+        public void RefreshContent()
+        {
+            RefreshGamesList(Library.GetAllEntires());
+
+            if(ContentFrame.CurrentSourcePageType == typeof(GameDetails))
+            {
+                ShowGameDetails(currentGameSlug);
+            }
+            else ContentFrame.Refresh();
+        }
+
         void RefreshGamesList(Dictionary<string, GameEntry> games)
         {
             gamesEntries.Clear();
             if (games == null) return;
-            foreach (var item in games.OrderBy(entry => entry.Value.Title))
+            foreach (var item in games.OrderBy(entry => entry.Value.GetSortingTitle()))
             {
                 gamesEntries.Add(new GameListEntry() { Name = item.Value.Title, Slug = item.Key });
             }
@@ -60,10 +74,10 @@ namespace CI536
 
         public void ShowGameDetails(string slug)
         {
-            GameEntry entry = Library.GetGameEntry(slug);
-            if (entry == null) return;
+            if (!Library.HasGameEntry(slug)) return;
             NavView.SelectedItem = null;
-            Navigate(new GameDetails(entry), true);
+            currentGameSlug = slug;
+            Navigate(new GameDetails(slug), true);
         }
 
         void Navigate(object page, bool bypass = false)
@@ -91,6 +105,42 @@ namespace CI536
         private void HomeButton_Click(object sender, RoutedEventArgs e)
         {
             ShowHome();
+        }
+
+        public void ShowGameContextMenu(string slug, UIElement element)
+        {
+            ContextMenu cm = FindResource("cmButton") as ContextMenu;
+            contextMenuSlug = slug;
+            cm.PlacementTarget = element;
+            cm.IsOpen = true;
+        }
+
+        private void GamesList_RightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var item = sender as System.Windows.Controls.ListViewItem;
+            if (item != null && item.IsSelected)
+            {
+                GameListEntry entry = (GameListEntry)item.Content;
+                ShowGameContextMenu(entry.Slug, sender as UIElement);
+            }
+        }
+
+        private void GameContextMenu_Play(object sender, RoutedEventArgs e)
+        {
+            GameEntry entry = Library.GetGameEntry(contextMenuSlug);
+            entry.Launch();
+        }
+
+        private void GameContextMenu_Edit(object sender, RoutedEventArgs e)
+        {
+            GameEntry entry = Library.GetGameEntry(contextMenuSlug);
+            entry.EditInfo();
+        }
+
+        private void GameContextMenu_Hide(object sender, RoutedEventArgs e)
+        {
+            GameEntry entry = Library.GetGameEntry(contextMenuSlug);
+            entry.Hide();
         }
     }
 

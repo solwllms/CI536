@@ -9,6 +9,7 @@ namespace CI536
     public class GameEntry
     {
         public string Title { get; set; }
+        public string SortingTitle { get; set; }
         public List<string> Developers { get; set; }
         public List<string> Publishers { get; set; }
         public string Summary { get; set; }
@@ -29,6 +30,12 @@ namespace CI536
             PlaytimeTotalMins = -1;
             PlaytimeFortnightMins = -1;
             ReleaseYear = -1;
+        }
+
+        public string GetSortingTitle()
+        {
+            if (string.IsNullOrEmpty(SortingTitle)) return Title;
+            else return SortingTitle;
         }
 
         public void AddConfig(LaunchConfig config)

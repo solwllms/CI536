@@ -51,5 +51,20 @@ namespace CI536
 
             return list;
         }
+
+        // https://stackoverflow.com/questions/2444033/get-dictionary-key-by-value
+        public static T KeyByValue<T, W>(this Dictionary<T, W> dict, W val)
+        {
+            T key = default;
+            foreach (KeyValuePair<T, W> pair in dict)
+            {
+                if (EqualityComparer<W>.Default.Equals(pair.Value, val))
+                {
+                    key = pair.Key;
+                    break;
+                }
+            }
+            return key;
+        }
     }
 }

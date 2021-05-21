@@ -37,7 +37,7 @@ namespace CI536
         {
             gamesEntriesRecent.Clear();
             if (games == null) return;
-            foreach (var item in games.OrderBy(entry => entry.Value.Title))
+            foreach (var item in games.OrderBy(entry => entry.Value.GetSortingTitle()))
             {
                 gamesEntriesRecent.Add(new GameTileEntry() { Title = item.Value.Title, Cover = item.Value.BoxArt == null ? null : WPFUtil.GetImageFromURL(item.Value.BoxArt), Slug = item.Key });
             }
@@ -49,7 +49,7 @@ namespace CI536
         {
             gamesEntries.Clear();
             if (games == null) return;
-            foreach (var item in games.OrderBy(entry => entry.Value.Title))
+            foreach (var item in games.OrderBy(entry => entry.Value.GetSortingTitle()))
             {
                 gamesEntries.Add(new GameTileEntry() { Title = item.Value.Title, Cover = item.Value.BoxArt == null ? null : WPFUtil.GetImageFromURL(item.Value.BoxArt), Slug = item.Key });
             }
@@ -65,6 +65,15 @@ namespace CI536
             {
                 GameTileEntry entry = (GameTileEntry)item.Content;
                 MainWindow.instance.ShowGameDetails(entry.Slug);
+            }
+        }
+        private void GameTile_RightButtonDown(object sender, RoutedEventArgs e)
+        {
+            var item = sender as ListViewItem;
+            if (item != null && item.IsSelected)
+            {
+                GameTileEntry entry = (GameTileEntry)item.Content;
+                MainWindow.instance.ShowGameContextMenu(entry.Slug, sender as UIElement);
             }
         }
     }

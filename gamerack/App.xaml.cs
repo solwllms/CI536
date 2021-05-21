@@ -27,6 +27,8 @@ namespace CI536
 			MainWindow wnd = new MainWindow();
 			splash.Hide();
 			wnd.Show();
+
+            Library.OnSaveChanges += () => wnd.RefreshContent();
 		}
 	}
 }

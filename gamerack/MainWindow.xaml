@@ -8,6 +8,14 @@
         Title="Gamerack" Width="1280" Height="720"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         ui:WindowHelper.UseModernWindowStyle="True">
+    <Window.Resources>
+        <ContextMenu x:Key="cmButton">
+            <MenuItem Header="Play" Click="GameContextMenu_Play" />
+            <MenuItem Header="Edit info" Click="GameContextMenu_Edit"/>
+            <Separator />
+            <MenuItem Header="Hide this game" Click="GameContextMenu_Hide"/>
+        </ContextMenu>
+    </Window.Resources>
     <DockPanel>
         <ui:NavigationView
             Canvas.ZIndex="1"
@@ -59,6 +67,7 @@
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <EventSetter Event="PreviewMouseLeftButtonDown" Handler="GamesList_LeftButtonDown" />
+                                <EventSetter Event="PreviewMouseRightButtonDown" Handler="GamesList_RightButtonDown" />
                             </Style>
                         </ListView.ItemContainerStyle>
                     </ListView>

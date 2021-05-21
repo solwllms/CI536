@@ -22,9 +22,10 @@ namespace CI536
     {
         GameEntry entry;
 
-        public GameDetails(GameEntry entry)
+        public GameDetails(string slug)
         {
             InitializeComponent();
+            GameEntry entry = Library.GetGameEntry(slug);
             this.entry = entry;
             lblTitle.Content = entry.Title;
             if(entry.Media.Count > 0)
@@ -54,6 +55,11 @@ namespace CI536
         private void ButtonPlay_Click(object sender, RoutedEventArgs e)
         {
             entry.Launch();
+        }
+
+        private void EditInfo_Click(object sender, RoutedEventArgs e)
+        {
+            entry.EditInfo();
         }
     }
 }

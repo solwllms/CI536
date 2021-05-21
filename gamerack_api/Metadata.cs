@@ -47,7 +47,12 @@ namespace CI536
             Console.WriteLine("100% - got all metadata!");
         }
 
-        private static async Task populateGames(string[] titles)
+        public static async Task PopulateGame(GameEntry entry)
+        {
+            await populateGame(entry);
+        }
+
+        private static async Task populateGames(string[] titles, string slug = null)
         {
             await getAccessToken();
 
@@ -64,67 +69,12 @@ namespace CI536
                 try
                 {
                     string name = (string)game["name"];
-                    //if (!titles.Contains(name)) continue;
                     if (name == null) continue;
 
-                    string summary = (string)game["summary"];
-                    string coverurl = null;
-                    if (game.ContainsKey("cover"))
-                        coverurl = "http:" + ((string)game["cover"]["url"]).Replace("t_thumb", "t_cover_big");
-
-                    List<string> developers = new List<string>();
-                    List<string> publishers = new List<string>();
-
-                    if (game.ContainsKey("involved_companies"))
-                    {
-                        foreach (var company in game["involved_companies"])
-                        {
-                            string company_name = (string)company["company"]["name"];
-                            if ((bool)company["developer"] && !(bool)company["porting"] && !developers.Contains(company_name))
-                                developers.Add(company_name);
-                            if ((bool)company["publisher"] && !(bool)company["porting"] && !publishers.Contains(company_name))
-                                publishers.Add(company_name);
-                        }
-                    }
-
-                    int earliest_release = int.MaxValue;
-                    if (game.ContainsKey("release_dates"))
-                    {
-                        foreach (JObject release in game["release_dates"])
-                        {
-                            if (release.ContainsKey("y"))
-                            {
-                                int year = (int)release["y"];
-                                if (year < earliest_release) earliest_release = year;
-                            }
-                        }
-                    }
-                    else earliest_release = -1;
-
-                    List<string> media = new List<string>();
-                    if (game.ContainsKey("screenshots"))
-                    {
-                        foreach (JObject screenshot in game["screenshots"])
-                        {
-                            if (screenshot.ContainsKey("url"))
-                                media.Add("http:" + ((string)screenshot["url"]).Replace("t_thumb", "t_1080p"));
-                        }
-                    }
-
-                    /*
-                    Console.WriteLine($"Title: {name} ({earliest_release})");
-                    Console.WriteLine("Developers: " + string.Join(", ", developers));
-                    Console.WriteLine("Publishers: " + string.Join(", ", publishers));
-                    Console.WriteLine("Desc: " + summary);
-                    Console.WriteLine("Cover: " + coverurl);*/
+                    if (slug != null) name = slug;
 
                     GameEntry entry = Library.GetGameEntry(name);
-                    entry.Developers = developers;
-                    entry.Publishers = publishers;
-                    entry.Summary = summary;
-                    entry.ReleaseYear = earliest_release;
-                    entry.BoxArt = coverurl;
-                    entry.Media = media;
+                    PopulateEntry(ref entry, game);
                 }
                 catch (Exception e)
                 {
@@ -133,6 +83,90 @@ namespace CI536
             }
 
             Library.SaveChanges();
+        }
+
+        private static async Task populateGame(GameEntry entry)
+        {
+            await getAccessToken();
+
+            string request = $"search \"" + entry.Title + "\";fields name, summary, cover.url, screenshots.url, involved_companies.*, involved_companies.company.name, release_dates.y; where platforms !=n & platforms = [6];";
+
+            string body = await postRequest($"https://api.igdb.com/v4/games/", request);
+            if (body == null)
+                return;
+
+            JArray array = JArray.Parse(body);
+            if (array.Count < 1) return;
+            JObject game = (JObject)array.First;
+
+            try
+            {
+                PopulateEntry(ref entry, game);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            Library.SaveChanges();
+        }
+
+        static void PopulateEntry(ref GameEntry entry, JObject json)
+        {
+            string name = (string)json["name"];
+            //if (!titles.Contains(name)) continue;
+            if (name == null) return;
+
+            string summary = (string)json["summary"];
+            string coverurl = null;
+            if (json.ContainsKey("cover"))
+                coverurl = "http:" + ((string)json["cover"]["url"]).Replace("t_thumb", "t_cover_big");
+
+            List<string> developers = new List<string>();
+            List<string> publishers = new List<string>();
+
+            if (json.ContainsKey("involved_companies"))
+            {
+                foreach (var company in json["involved_companies"])
+                {
+                    string company_name = (string)company["company"]["name"];
+                    if ((bool)company["developer"] && !(bool)company["porting"] && !developers.Contains(company_name))
+                        developers.Add(company_name);
+                    if ((bool)company["publisher"] && !(bool)company["porting"] && !publishers.Contains(company_name))
+                        publishers.Add(company_name);
+                }
+            }
+
+            int earliest_release = int.MaxValue;
+            if (json.ContainsKey("release_dates"))
+            {
+                foreach (JObject release in json["release_dates"])
+                {
+                    if (release.ContainsKey("y"))
+                    {
+                        int year = (int)release["y"];
+                        if (year < earliest_release) earliest_release = year;
+                    }
+                }
+            }
+            else earliest_release = -1;
+
+            List<string> media = new List<string>();
+            if (json.ContainsKey("screenshots"))
+            {
+                foreach (JObject screenshot in json["screenshots"])
+                {
+                    if (screenshot.ContainsKey("url"))
+                        media.Add("http:" + ((string)screenshot["url"]).Replace("t_thumb", "t_1080p"));
+                }
+            }
+
+            entry.Developers = developers;
+            entry.Publishers = publishers;
+            entry.Summary = summary;
+            entry.ReleaseYear = earliest_release;
+            entry.BoxArt = coverurl;
+            entry.Media = media;
         }
 
         public static async Task getAccessToken()

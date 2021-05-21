@@ -20,6 +20,8 @@ namespace CI536
         private static Dictionary<string, GameEntry> collection;
         private static FixedList<string> recent;
 
+        public static event LibraryEvent OnSaveChanges;
+
         public static void Init()
         {
             UserConfig.RegisterConfig(CONFIG_FILE);
@@ -61,6 +63,8 @@ namespace CI536
         {
             if (collection == null) return;
 
+            OnSaveChanges?.Invoke();
+
             string libraryPath = UserConfig.GetValue(CONFIG_FILE, "libary_path", defaultPath);
 
             JsonSerializerSettings settings = new JsonSerializerSettings();
@@ -94,6 +98,11 @@ namespace CI536
             if (collection == null || search == null || String.IsNullOrEmpty(search)) return null;
             return collection.Where(e => e.Value.Title.ToLower().Contains(search.Trim().ToLower()))
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        }
+        public static string GetEntrySlug(GameEntry entry)
+        {
+            if (collection == null || !collection.ContainsValue(entry)) return null;
+            return collection.KeyByValue(entry);
         }
 
         public static GameEntry GetGameEntry(string title)
@@ -138,4 +147,6 @@ namespace CI536
             UserConfig.SetValue(CONFIG_FILE, "recent", recent.ToArray());
         }
     }
+
+    public delegate void LibraryEvent();
 }

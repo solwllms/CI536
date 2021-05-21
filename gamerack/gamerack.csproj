@@ -64,6 +64,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="EditGameInfo.xaml.cs">
+      <DependentUpon>EditGameInfo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Ext.cs" />
     <Compile Include="GameDetails.xaml.cs">
       <DependentUpon>GameDetails.xaml</DependentUpon>
     </Compile>
@@ -81,6 +85,10 @@
       <DependentUpon>Splash.xaml</DependentUpon>
     </Compile>
     <Compile Include="WPFUtil.cs" />
+    <Page Include="EditGameInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GameDetails.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

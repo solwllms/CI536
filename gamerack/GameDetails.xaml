@@ -62,7 +62,7 @@
                         <Label Grid.Column="0" Grid.Row="2" FontWeight="Bold" Content="Released"/>
                         <Label x:Name="lblRel"  Grid.Column="1" Grid.Row="2" Margin="0,0,0,10"/>
                     </Grid>
-                    <Button Content="Edit" VerticalAlignment="Top" HorizontalAlignment="Stretch"/>
+                    <Button Content="Edit" VerticalAlignment="Top" HorizontalAlignment="Stretch" Click="EditInfo_Click"/>
                 </StackPanel>
             </Grid>
         </ScrollViewer>
