@@ -35,5 +35,17 @@ namespace CI536
                 while (l.Count > Limit) l.RemoveAt(Limit - 1);
             }
         }
+
+        public void Add(T obj)
+        {
+            if (l.Contains(obj))
+                l.Remove(obj);
+
+            l.Add(obj);
+            lock (lockObject)
+            {
+                while (l.Count > Limit) l.RemoveAt(Limit - 1);
+            }
+        }
     }
 }

@@ -37,7 +37,7 @@ namespace CI536
         {
             gamesEntriesRecent.Clear();
             if (games == null) return;
-            foreach (var item in games.OrderBy(entry => entry.Value.GetSortingTitle()))
+            foreach (var item in games)
             {
                 gamesEntriesRecent.Add(new GameTileEntry() { Title = item.Value.Title, Cover = item.Value.BoxArt == null ? null : WPFUtil.GetImageFromURL(item.Value.BoxArt), Slug = item.Key });
             }

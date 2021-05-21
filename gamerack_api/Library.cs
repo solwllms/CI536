@@ -51,7 +51,7 @@ namespace CI536
             {
                 foreach (var entry in UserConfig.GetValue<JArray>(CONFIG_FILE, "recent"))
                 {
-                    recent.Enqueue(entry.ToString());
+                    recent.Add(entry.ToString());
                 }
             }
             else {
