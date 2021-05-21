@@ -16,6 +16,7 @@ namespace CI536
         public int ReleaseYear { get; set; }
         public int PlaytimeTotalMins { get; set; }
         public int PlaytimeFortnightMins { get; set; }
+        public bool Hidden { get; set; }
         public string BoxArt { get; set; }
         public List<string> Media { get; set; }
         public Dictionary<string, LaunchConfig> Configs { get; set; }
@@ -30,6 +31,7 @@ namespace CI536
             PlaytimeTotalMins = -1;
             PlaytimeFortnightMins = -1;
             ReleaseYear = -1;
+            Hidden = false;
         }
 
         public string GetSortingTitle()

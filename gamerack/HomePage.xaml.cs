@@ -51,6 +51,7 @@ namespace CI536
             if (games == null) return;
             foreach (var item in games.OrderBy(entry => entry.Value.GetSortingTitle()))
             {
+                if (item.Value.Hidden && !MainWindow.instance.showHidden) continue;
                 gamesEntries.Add(new GameTileEntry() { Title = item.Value.Title, Cover = item.Value.BoxArt == null ? null : WPFUtil.GetImageFromURL(item.Value.BoxArt), Slug = item.Key });
             }
             GamesListTile.ItemsSource = gamesEntries;

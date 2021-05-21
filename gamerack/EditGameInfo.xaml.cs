@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ModernWpf.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,7 +18,7 @@ namespace CI536
     /// <summary>
     /// Interaction logic for EditGameInfo.xaml
     /// </summary>
-    public partial class EditGameInfo : Window
+    public partial class EditGameInfo : ContentDialog
     {
         GameEntry entry;
 
@@ -31,13 +32,16 @@ namespace CI536
 
         void Refresh()
         {
-            Title = "Edit - " + entry.Title;
+            Title = "Editing " + entry.Title;
 
             txtTitle.Text = entry.Title;
             txtSortingTitle.Text = entry.GetSortingTitle();
             txtSummary.Text = entry.Summary;
             txtYear.Text = entry.ReleaseYear.ToString();
             if (txtYear.Text == "-1") txtYear.Text = "";
+
+            txtDev.Text = string.Join("\n", entry.Developers);
+            txtPub.Text = string.Join("\n", entry.Publishers);
         }
 
         // https://stackoverflow.com/questions/4085471/allow-only-numeric-entry-in-wpf-text-box/4085607
@@ -56,7 +60,7 @@ namespace CI536
         {
             UpdateEntry();
             Library.SaveChanges();
-            Close();
+            Hide();
         }
 
         void UpdateEntry()
@@ -72,6 +76,9 @@ namespace CI536
             int y;
             if (int.TryParse(txtYear.Text, out y) || y > 0) entry.ReleaseYear = y;
             else entry.ReleaseYear = -1;
+
+            entry.Developers = txtDev.Text.Split('\n').ToList();
+            entry.Publishers = txtPub.Text.Split('\n').ToList();
         }
 
         private void FetchInfo(object sender, RoutedEventArgs e)
@@ -86,6 +93,11 @@ namespace CI536
             await Metadata.PopulateGame(entry);
             Refresh();
             IsEnabled = true;
+        }
+
+        private void Cancel(object sender, RoutedEventArgs e)
+        {
+            Hide();
         }
     }
 }

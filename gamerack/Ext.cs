@@ -12,12 +12,12 @@ namespace CI536
         {
             EditGameInfo edit = new EditGameInfo(entry);
             //edit.Parent = MainWindow.instance;
-            edit.Show();
+            edit.ShowAsync();
         }
 
-        public static void Hide(this GameEntry entry)
+        public static void ToggleVisibility(this GameEntry entry)
         {
-            throw new NotImplementedException();
+            entry.Hidden = !entry.Hidden;
         }
     }
 }

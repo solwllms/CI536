@@ -12,26 +12,34 @@ namespace CI536
     /// </summary>
     public partial class MainWindow : Window
     {
+        private const string CONFIG_FILE = "settings";
+
         public static MainWindow instance;
         List<GameListEntry> gamesEntries;
+
+        public bool showHidden;
+        public bool ShowHidden { get { return showHidden; } }
+        public bool NotShowHidden { get { return !showHidden; } }
 
         private string contextMenuSlug;
         private string currentGameSlug;
 
         public MainWindow()
         {
+            showHidden = UserConfig.GetValue(CONFIG_FILE, "show-hidden", false);
             InitializeComponent();
+
             gamesEntries = new List<GameListEntry>();
 
             instance = this;
 
             ShowHome();
-            RefreshGamesList(Library.GetAllEntires());
+            RefreshGamesList();
         }
 
         public void RefreshContent()
         {
-            RefreshGamesList(Library.GetAllEntires());
+            RefreshGamesList();
 
             if(ContentFrame.CurrentSourcePageType == typeof(GameDetails))
             {
@@ -40,13 +48,16 @@ namespace CI536
             else ContentFrame.Refresh();
         }
 
-        void RefreshGamesList(Dictionary<string, GameEntry> games)
+        void RefreshGamesList(Dictionary<string, GameEntry> games = null)
         {
             gamesEntries.Clear();
-            if (games == null) return;
+            if (games == null) games = Library.GetAllEntires();
+            if (games == null) return; // maybe something went wrong!
             foreach (var item in games.OrderBy(entry => entry.Value.GetSortingTitle()))
             {
-                gamesEntries.Add(new GameListEntry() { Name = item.Value.Title, Slug = item.Key });
+                if (item.Value.Hidden && !showHidden) continue;
+
+                gamesEntries.Add(new GameListEntry() { Name = item.Value.Title + (item.Value.Hidden ? " (Hidden)" : ""), Slug = item.Key });
             }
             lvGames.ItemsSource = gamesEntries;
             lvGames.Items.Refresh();
@@ -137,10 +148,24 @@ namespace CI536
             entry.EditInfo();
         }
 
-        private void GameContextMenu_Hide(object sender, RoutedEventArgs e)
+        private void GameContextMenu_ToggleVisibility(object sender, RoutedEventArgs e)
         {
             GameEntry entry = Library.GetGameEntry(contextMenuSlug);
-            entry.Hide();
+            entry.ToggleVisibility();
+            Library.SaveChanges();
+        }
+
+        private void GameContextMenu_ShowAllGames(object sender, RoutedEventArgs e)
+        {
+            showHidden = true;
+            UserConfig.SetValue(CONFIG_FILE, "show-hidden", showHidden);
+            RefreshGamesList();
+        }
+        private void GameContextMenu_HideHiddenGames(object sender, RoutedEventArgs e)
+        {
+            showHidden = false;
+            UserConfig.SetValue(CONFIG_FILE, "show-hidden", showHidden);
+            RefreshGamesList();
         }
     }
 

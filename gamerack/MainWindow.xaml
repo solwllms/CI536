@@ -1,4 +1,5 @@
 ﻿<Window x:Class="CI536.MainWindow"
+        x:Name="mainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -10,10 +11,30 @@
         ui:WindowHelper.UseModernWindowStyle="True" WindowState="Maximized" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <ContextMenu x:Key="cmButton">
-            <MenuItem Header="Play" Click="GameContextMenu_Play" />
-            <MenuItem Header="Edit info" Click="GameContextMenu_Edit"/>
+            <MenuItem Header="Play" Click="GameContextMenu_Play">
+                <MenuItem.Icon>
+                    <ui:SymbolIcon Symbol="Play" />
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Edit info" Click="GameContextMenu_Edit">
+                <MenuItem.Icon>
+                    <ui:SymbolIcon Symbol="Edit" />
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Toggle visibility" Click="GameContextMenu_ToggleVisibility">
+                <MenuItem.Icon>
+                    <ui:SymbolIcon Symbol="View" />
+                </MenuItem.Icon>
+            </MenuItem>
             <Separator />
-            <MenuItem Header="Hide this game" Click="GameContextMenu_Hide"/>
+            <ui:RadioMenuItem
+                IsChecked="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=ShowHidden, Mode=OneWay }"
+                Checked="GameContextMenu_ShowAllGames"
+                Header="Show all games"/>
+            <ui:RadioMenuItem
+                IsChecked="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=NotShowHidden, Mode=OneWay }"
+                Checked="GameContextMenu_HideHiddenGames"
+                Header="Hide hidden games"/>
         </ContextMenu>
     </Window.Resources>
     <DockPanel>
