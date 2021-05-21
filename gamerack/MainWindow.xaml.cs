@@ -41,11 +41,12 @@ namespace CI536
         {
             RefreshGamesList();
 
-            if(ContentFrame.CurrentSourcePageType == typeof(GameDetails))
-            {
-                ShowGameDetails(currentGameSlug);
-            }
-            else ContentFrame.Refresh();
+            if (ContentFrame.CurrentSourcePageType == typeof(HomePage))
+                (ContentFrame.Content as HomePage).Refresh();
+            else if (ContentFrame.CurrentSourcePageType == typeof(GameDetails))
+                (ContentFrame.Content as GameDetails).Refresh();
+
+            ContentFrame.Refresh();
         }
 
         void RefreshGamesList(Dictionary<string, GameEntry> games = null)
@@ -144,8 +145,7 @@ namespace CI536
 
         private void GameContextMenu_Edit(object sender, RoutedEventArgs e)
         {
-            GameEntry entry = Library.GetGameEntry(contextMenuSlug);
-            entry.EditInfo();
+            EditGameInfo.EditInfo(contextMenuSlug);
         }
 
         private void GameContextMenu_ToggleVisibility(object sender, RoutedEventArgs e)

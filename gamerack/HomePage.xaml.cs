@@ -29,9 +29,14 @@ namespace CI536
             gamesEntries = new List<GameTileEntry>();
             gamesEntriesRecent = new List<GameTileEntry>();
 
+            Refresh();
+        }
+
+        public void Refresh()
+        {
             RefreshGamesList(Library.GetAllEntires());
             RefreshRecentGames(Library.GetRecentGames());
-        }
+        } 
 
         void RefreshRecentGames(Dictionary<string, GameEntry> games)
         {

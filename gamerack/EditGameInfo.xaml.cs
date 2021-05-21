@@ -20,17 +20,25 @@ namespace CI536
     /// </summary>
     public partial class EditGameInfo : ContentDialog
     {
-        GameEntry entry;
+        string slug;
 
-        public EditGameInfo(GameEntry entry)
+        GameEntry entry => Library.GetGameEntry(slug);
+
+        public static void EditInfo(string slug)
         {
-            this.entry = entry;
+            EditGameInfo edit = new EditGameInfo(slug);
+            edit.ShowAsync();
+        }
+
+        public EditGameInfo(string slug)
+        {
+            this.slug = slug;
             InitializeComponent();
 
             Refresh();
         }
 
-        void Refresh()
+        public void Refresh()
         {
             Title = "Editing " + entry.Title;
 
@@ -83,8 +91,12 @@ namespace CI536
 
         private void FetchInfo(object sender, RoutedEventArgs e)
         {
+            /*
             UpdateEntry();
-            _ = AutoPopulate(entry);
+            _ = AutoPopulate(entry);*/
+            Hide();
+            MetadataSearch search = new MetadataSearch(this, Library.GetEntrySlug(entry), txtTitle.Text);
+            search.ShowAsync();
         }
 
         async Task AutoPopulate(GameEntry entry)

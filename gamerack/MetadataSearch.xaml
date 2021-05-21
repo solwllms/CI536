@@ -1,0 +1,43 @@
+﻿<ui:ContentDialog  xmlns:ui="http://schemas.modernwpf.com/2019" x:Class="CI536.MetadataSearch"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CI536"
+            Title="Search IGDB"
+             mc:Ignorable="d">
+    <ui:ContentDialog.Resources>
+        <DataTemplate x:Key="MetadataResult">
+            <StackPanel>
+                <Label Content="{Binding Title}"/>
+                <Label Content="{Binding ReleaseYear}"/>
+            </StackPanel>
+        </DataTemplate>
+    </ui:ContentDialog.Resources>
+    <Grid>
+        <DockPanel >
+            <ui:AutoSuggestBox
+                x:Name="SearchBox"
+                DockPanel.Dock="Top"
+                PlaceholderText="Search"
+                QuerySubmitted="controlsSearchBox_QuerySubmitted"
+                QueryIcon="Find"/>
+            <ListBox DockPanel.Dock="Top" Name="ListResults" ItemTemplate="{StaticResource MetadataResult}" Background="Transparent" SelectionMode="Single">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel HorizontalAlignment="Left"/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ResultsList_PreviewMouseLeftButtonDown" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+            <DockPanel DockPanel.Dock="Bottom" Grid.ColumnSpan="2" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                <Button Content="Cancel" Margin="0,0,0,10" Click="Cancel"/>
+            </DockPanel>
+        </DockPanel>
+
+    </Grid>
+</ui:ContentDialog>

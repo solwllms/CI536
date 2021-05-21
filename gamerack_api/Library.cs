@@ -113,6 +113,12 @@ namespace CI536
             return collection[title];
         }
 
+        public static void ReplaceGameEntry(string slug, GameEntry entry)
+        {
+            if (collection == null || !collection.ContainsKey(slug)) return;
+            collection[slug] = entry;
+        }
+
         public static bool HasGameEntry(string title)
         {
             title = title.Trim().ToLower().ToSlug();

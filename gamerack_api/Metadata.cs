@@ -47,6 +47,11 @@ namespace CI536
             Console.WriteLine("100% - got all metadata!");
         }
 
+        public static async Task<List<GameEntry>> PopulateResults(string search)
+        {
+            return await populateResults(search);
+        }
+
         public static async Task PopulateGame(GameEntry entry)
         {
             await populateGame(entry);
@@ -83,6 +88,38 @@ namespace CI536
             }
 
             Library.SaveChanges();
+        }
+
+        private static async Task<List<GameEntry>> populateResults(string search)
+        {
+            await getAccessToken();
+
+            string request = $"search \"" + search + "\";fields name, summary, cover.url, screenshots.url, involved_companies.*, involved_companies.company.name, release_dates.y; where platforms !=n & platforms = [6];";
+
+            string body = await postRequest($"https://api.igdb.com/v4/games/", request);
+            if (body == null)
+                return null;
+
+            JArray array = JArray.Parse(body);
+            List<GameEntry> entries = new List<GameEntry>();
+            foreach (JObject game in array)
+            {
+                try
+                {
+                    string name = (string)game["name"];
+                    if (name == null) continue;
+
+                    GameEntry entry = new GameEntry();
+                    PopulateEntry(ref entry, game);
+                    entries.Add(entry);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+
+            return entries;
         }
 
         private static async Task populateGame(GameEntry entry)
@@ -161,6 +198,8 @@ namespace CI536
                 }
             }
 
+            entry.Title = name;
+            entry.SortingTitle = null;
             entry.Developers = developers;
             entry.Publishers = publishers;
             entry.Summary = summary;

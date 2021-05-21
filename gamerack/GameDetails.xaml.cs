@@ -20,16 +20,23 @@ namespace CI536
     /// </summary>
     public partial class GameDetails : UserControl
     {
-        GameEntry entry;
+
         List<BitmapImage> media;
+        string slug;
+
+        GameEntry entry => Library.GetGameEntry(slug);
 
         public GameDetails(string slug)
         {
             InitializeComponent();
-            GameEntry entry = Library.GetGameEntry(slug);
-            this.entry = entry;
+            this.slug = slug;
+            Refresh();
+        }
+
+        public void Refresh()
+        {
             lblTitle.Content = entry.Title;
-            if(entry.Media.Count > 0)
+            if (entry.Media.Count > 0)
                 imgHeader.Source = WPFUtil.GetImageFromURL(entry.Media[0]);
 
             lblSummary.Text = entry.Summary;
@@ -70,7 +77,7 @@ namespace CI536
 
         private void EditInfo_Click(object sender, RoutedEventArgs e)
         {
-            entry.EditInfo();
+            EditGameInfo.EditInfo(slug);
         }
     }
 }
