@@ -18,7 +18,7 @@
                 <GradientStop Color="#1f547e"/>
             </LinearGradientBrush>
         </Border.Background>
-        <Image Source="wordmark-white.png" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" VerticalAlignment="Center" Height="60" Width="440"/>
+        <Image Source="wordmark-black.png" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" VerticalAlignment="Center" Height="60" Width="440"/>
 
     </Border>
 </Window>
