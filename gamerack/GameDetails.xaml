@@ -42,9 +42,9 @@
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel>
-                    <StackPanel Grid.Column="0" Margin="0,0,10,10">
+                    <StackPanel x:Name="pnlPlaytime" Grid.Column="0" Margin="0,0,10,10">
                         <Border Background="#262626" CornerRadius="7" DockPanel.Dock="Top" Padding="20">
-                            <Grid x:Name="pnlPlaytime">
+                            <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition/>
                                     <RowDefinition/>
