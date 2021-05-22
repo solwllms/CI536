@@ -65,6 +65,11 @@ namespace plugin
         {
             api = new SteamAPI();            
             return await api.LoginPrompt(true, null, null, null, null);
+            if (!api.RequestGames())
+            {
+                SteamAPI.ShowDialogNotice("Failed to sync. You can retry sync from the plugins menu.");
+                Debug.WriteLine("Failed to sync!");
+            }
         }
 
         public async Task Authenticate()
