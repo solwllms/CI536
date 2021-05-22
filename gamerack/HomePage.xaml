@@ -12,26 +12,22 @@
         <DataTemplate x:Key="ItemTemplate" DataType="{x:Type local:GameTileEntry}">
             <Border Name="border" BorderBrush="#FF000000" BorderThickness="2" CornerRadius="7">
                 <Grid Background="Transparent">
-                    <Border Background="#262626" CornerRadius="7" />
+                    <Border Background="#262626" CornerRadius="7">
+                        <DockPanel Name="Title">
+                            <TextBlock Text="{Binding Title}" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+                        </DockPanel>
+                    </Border>
                     <Border CornerRadius="7">
                         <Border.Background>
                             <ImageBrush Stretch="Fill" ImageSource="{Binding Cover}" />
                         </Border.Background>
                     </Border>
-                    <DockPanel Width="200" Height="267" >
-                        <DockPanel Name="Title" Visibility="Hidden">
-                            <TextBlock Text="{Binding Title}" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
-                        </DockPanel>
-                    </DockPanel>
                 </Grid>
             </Border>
             <DataTemplate.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter TargetName="border" Property="BorderBrush" Value="#0078D7"/>
                 </Trigger>
-                <DataTrigger Binding="{Binding Cover}" Value="{x:Null}">
-                    <Setter TargetName="Title" Property="Visibility" Value="Visible" />
-                </DataTrigger>
             </DataTemplate.Triggers>
         </DataTemplate>
     </UserControl.Resources>
