@@ -22,7 +22,7 @@ namespace CI536
 			Library.Init();
 			Metadata.Init();
 
-			Plugins.LoadPlugins();
+			PluginManager.LoadPlugins();
 
 			MainWindow wnd = new MainWindow();
 			splash.Hide();

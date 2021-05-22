@@ -1,4 +1,5 @@
-﻿using plugin;
+﻿using ModernWpf.Controls;
+using plugin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,15 +20,13 @@ namespace CI536
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class Login : Window
+    public partial class Login : ContentDialog
     {
         AUTH_MODE authMode;
 
         public Login()
         {
             InitializeComponent();
-
-            this.Deactivated += (s, e) => this.Activate();
         }
 
         public void UpdateStage(AUTH_MODE authMode, string error)
@@ -38,13 +37,21 @@ namespace CI536
 
             this.lbl_auth.Visibility = authMode != AUTH_MODE.NONE ? Visibility.Visible : Visibility.Hidden;
             this.txt_auth.Visibility = authMode != AUTH_MODE.NONE ? Visibility.Visible : Visibility.Hidden;
+
+            IsEnabled = true;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ButtonLogin(object sender, RoutedEventArgs e)
         {
             PluginDLL.Login(txt_username.Text, txt_password.Password,
                 authMode == AUTH_MODE.APP ? txt_auth.Text : null,
                 authMode == AUTH_MODE.EMAIL ? txt_auth.Text : null);
+            IsEnabled = false;
+        }
+
+        private void ButtonCancel(object sender, RoutedEventArgs e)
+        {
+            Hide();
         }
     }
 }

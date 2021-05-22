@@ -18,21 +18,24 @@ namespace CI536
     /// <summary>
     /// Interaction logic for SettingsPage.xaml
     /// </summary>
-    public partial class SettingsPage : Page
+    public partial class SettingsPage : UserControl
     {
         public SettingsPage()
         {
             InitializeComponent();
+
+            ListPlugins.ItemsSource = PluginManager.Registered.Values;
+            ListPlugins.Items.Refresh();
         }
 
         private void Button_Login(object sender, RoutedEventArgs e)
         {
-            Plugins.GetPlugin("steam").Authenticate();
+            PluginManager.GetPlugin("steam").Authenticate();
         }
 
         private void Button_Sync(object sender, RoutedEventArgs e)
         {
-            Plugins.GetPlugin("steam").Sync();
+            PluginManager.GetPlugin("steam").Sync();
         }
     }
 }

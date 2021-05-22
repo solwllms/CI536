@@ -48,9 +48,9 @@
             ItemInvoked="NavView_ItemInvoked"
             OpenPaneLength="315">
             <ui:NavigationView.MenuItems>
-                <ui:NavigationViewItem Content="Import game/library" Icon="Sync" Tag=""/>
+                <ui:NavigationViewItem Content="Import game/library" Icon="Library" Tag="{x:Type local:ImportWizard}"/>
                 <ui:NavigationViewItemSeparator/>
-                <ui:NavigationViewItem Content="Settings" Icon="Setting" Tag="{x:Type local:SettingsPage}" />
+                <ui:NavigationViewItem Content="Plugins" Icon="Repair" Tag="{x:Type local:SettingsPage}" />
                 <ui:NavigationViewItem Content="About" Icon="Comment" Tag=""/>
             </ui:NavigationView.MenuItems>
 

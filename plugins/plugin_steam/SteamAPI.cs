@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System;
 using System.Windows;
+using ModernWpf.Controls;
 
 namespace plugin
 {
@@ -60,6 +61,8 @@ namespace plugin
         private JobID gameRequest = JobID.Invalid;
         CancellationTokenSource cancelCallbackTok;
 
+        private static ContentDialog dialog;
+
         public async Task<bool> LoginPrompt(bool background = false, string username = null, string password = null, string authCode = null, string emailCode = null)
         {
             UserConfig.RegisterConfig("steam");
@@ -100,7 +103,9 @@ namespace plugin
                     {
                         manager.RunCallbacks();
                     }
-                    catch(Exception e) { }
+                    catch(Exception e) {
+                        Console.WriteLine("Error! : " + e.Message);
+                    }
                 }
             }, cancelCallbackTok.Token);
             callbackTask.Start();
@@ -176,9 +181,13 @@ namespace plugin
             }
 
             while(friends.GetPersonaName() == null) { }
-            Debug.WriteLine("Successfully logged into steam! Welcome, " + friends.GetPersonaName());
-            loginStatus = LOGIN_STATUS.SUCCESS;
             CloseLogin();
+            Debug.WriteLine("Successfully logged into steam! Welcome, " + friends.GetPersonaName());
+
+            if (!background)
+                ShowDialogNotice($"Successfully logged into steam! Welcome, {friends.GetPersonaName()}.");
+
+            loginStatus = LOGIN_STATUS.SUCCESS;
 
             steamID = obj.ClientSteamID;
         }
@@ -250,13 +259,40 @@ namespace plugin
                 }
             }
 
-            Library.SaveChanges();
-            Debug.WriteLine($"Added { resp.game_count - existing } games to your library.");
-            Console.ResetColor();
-
             gameRequest = JobID.Invalid;
 
-            _ = Metadata.PopulateGames(titles);
+            Application.Current.Dispatcher.Invoke(new Action(async () =>
+            {
+                int num = (int) resp.game_count - existing;
+
+                Debug.WriteLine($"Added { num } games to your library.");
+                Console.ResetColor();
+
+                Library.SaveChanges();
+
+                if (num > 0) {
+                    ShowDialogNotice($"We'll now add the { num } games from your Steam library to your collection. We'll also grab the information for these titles from the internet.\n\nThis might take a little while! Please do not interrupt this process.", "Working..");
+                    dialog.IsEnabled = false;
+                    await Metadata.PopulateGames(titles);
+                    dialog.IsEnabled = true;
+                    ShowDialogNotice($"Finished populating your library. Have fun!", "All done");
+                }
+            }));
+        }
+
+        public static void ShowDialogNotice(string message, string title = "Steam Plugin")
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() => {
+                dialog?.Hide();
+
+                dialog = new ContentDialog {
+                    Title = title,
+                    Content = message,
+                    IsPrimaryButtonEnabled = false,
+                    CloseButtonText = "Ok"
+                };
+                _ = dialog.ShowAsync();
+            }));
         }
 
         private void PrintAppInfo(int appid, int playtime_forever)
@@ -322,7 +358,7 @@ namespace plugin
             Application.Current.Dispatcher.Invoke((Action)delegate {
                 if (loginWindow == null) loginWindow = new Login();
                 loginWindow.UpdateStage(auth, error);
-                loginWindow.Show();
+                loginWindow.ShowAsync();
             });
         }
 
@@ -332,7 +368,7 @@ namespace plugin
 
             Application.Current.Dispatcher.Invoke((Action)delegate {
                 if (loginWindow != null)
-                    loginWindow.Close();
+                    loginWindow.Hide();
             });
         }
     }
