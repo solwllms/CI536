@@ -45,6 +45,8 @@ namespace CI536
                 Thread.Sleep(1500);
             }
             Console.WriteLine("100% - got all metadata!");
+
+            Library.SaveChanges();
         }
 
         public static async Task<List<GameEntry>> PopulateResults(string search)
@@ -86,8 +88,6 @@ namespace CI536
                     Console.WriteLine(e);
                 }
             }
-
-            Library.SaveChanges();
         }
 
         private static async Task<List<GameEntry>> populateResults(string search)
@@ -157,7 +157,7 @@ namespace CI536
             string summary = (string)json["summary"];
             string coverurl = null;
             if (json.ContainsKey("cover"))
-                coverurl = "http:" + ((string)json["cover"]["url"]).Replace("t_thumb", "t_cover_big");
+                coverurl = "http:" + ((string)json["cover"]["url"]).Replace("t_thumb", "t_cover_big_2x");
 
             List<string> developers = new List<string>();
             List<string> publishers = new List<string>();
@@ -194,7 +194,7 @@ namespace CI536
                 foreach (JObject screenshot in json["screenshots"])
                 {
                     if (screenshot.ContainsKey("url"))
-                        media.Add("http:" + ((string)screenshot["url"]).Replace("t_thumb", "t_1080p"));
+                        media.Add("http:" + ((string)screenshot["url"]).Replace("t_thumb", "t_1080p_2x"));
                 }
             }
 

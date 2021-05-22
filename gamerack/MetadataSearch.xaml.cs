@@ -50,7 +50,7 @@ namespace CI536
             if (item != null && item.IsSelected)
             {
                 GameEntry entry = item.Content as GameEntry;
-                Library.ReplaceGameEntry(slug, entry);
+                Library.CopyEntryMetadata(slug, entry);
                 Hide();
                 original.ShowAsync();
 
@@ -68,6 +68,11 @@ namespace CI536
         private void controlsSearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             _ = RefreshResults(sender.Text);
+        }
+
+        private void Search(object sender, RoutedEventArgs e)
+        {
+            _ = RefreshResults(SearchBox.Text);
         }
     }
 }

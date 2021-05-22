@@ -113,10 +113,16 @@ namespace CI536
             return collection[title];
         }
 
-        public static void ReplaceGameEntry(string slug, GameEntry entry)
+        public static void CopyEntryMetadata(string slug, GameEntry entry)
         {
             if (collection == null || !collection.ContainsKey(slug)) return;
-            collection[slug] = entry;
+            collection[slug].Title = entry.Title;
+            collection[slug].SortingTitle = entry.Title;
+            collection[slug].Summary = entry.Summary;
+            collection[slug].Developers = entry.Developers;
+            collection[slug].Publishers = entry.Publishers;
+            collection[slug].Media = entry.Media;
+            collection[slug].BoxArt = entry.BoxArt;
         }
 
         public static bool HasGameEntry(string title)

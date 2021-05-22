@@ -8,7 +8,7 @@
              mc:Ignorable="d">
     <ui:ContentDialog.Resources>
         <DataTemplate x:Key="MetadataResult">
-            <StackPanel>
+            <StackPanel HorizontalAlignment="Stretch">
                 <Label Content="{Binding Title}"/>
                 <Label Content="{Binding ReleaseYear}"/>
             </StackPanel>
@@ -35,6 +35,7 @@
                 </ListBox.ItemContainerStyle>
             </ListBox>
             <DockPanel DockPanel.Dock="Bottom" Grid.ColumnSpan="2" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                <Button Content="Search" Margin="0,0,10,10" Click="Search" Style="{DynamicResource AccentButtonStyle}"/>
                 <Button Content="Cancel" Margin="0,0,0,10" Click="Cancel"/>
             </DockPanel>
         </DockPanel>
