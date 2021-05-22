@@ -10,11 +10,13 @@ namespace CI536
     public class Plugin
     {
         public bool isLoaded;
+        public bool isRefreshEnabled = true;
 
         public string Name => getName();
         public string Author => getAuthor();
         public string Summary => getSummary();
         public string Version => getVersion();
+        public bool RefreshEnabled => isRefreshEnabled;
 
         public List<ImportMethod> ImportMethods => importMethods;
 
@@ -35,14 +37,9 @@ namespace CI536
             throw new NotImplementedException($"Load() is not defined in loaded plugin '{ getName() }'.");
         }
 
-        public virtual async Task Authenticate()
+        public virtual async Task Refresh()
         {
-            throw new NotImplementedException($"Authenticate() is not defined in loaded plugin '{ getName() }'.");
-        }
-
-        public virtual async Task Sync()
-        {
-            throw new NotImplementedException($"Sync() is not defined in loaded plugin '{ getName() }'.");
+            throw new NotImplementedException($"Refresh() is not defined in loaded plugin '{ getName() }'.");
         }
 
         public virtual string getName()

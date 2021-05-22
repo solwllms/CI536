@@ -12,6 +12,8 @@ namespace plugin
 
         public PluginDefault()
         {
+            isRefreshEnabled = false;
+
             ImportMethod main = new ImportMethod("Local Disk", "Import game executables from local disk.", ImportGames, new SymbolIcon(Symbol.NewFolder));
             RegisterImportMethod(main);
         }
@@ -26,12 +28,7 @@ namespace plugin
             return true;
         }
 
-        public override async Task Authenticate()
-        {
-
-        }
-
-        public override async Task Sync()
+        public override async Task Refresh()
         {
 
         }

@@ -28,14 +28,10 @@ namespace CI536
             ListPlugins.Items.Refresh();
         }
 
-        private void Button_Login(object sender, RoutedEventArgs e)
+        private void Plugin_Refresh(object sender, RoutedEventArgs e)
         {
-            PluginManager.GetPlugin("steam").Authenticate();
-        }
-
-        private void Button_Sync(object sender, RoutedEventArgs e)
-        {
-            PluginManager.GetPlugin("steam").Sync();
+            FrameworkElement fe = sender as FrameworkElement;
+            _ = ((Plugin)fe.DataContext).Refresh();
         }
     }
 }

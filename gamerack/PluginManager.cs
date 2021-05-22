@@ -68,7 +68,7 @@ namespace CI536
                 {
                     bool loaded = await plugin.Load();
                     plugin.isLoaded = loaded;
-                    await plugin.Sync();
+                    await plugin.Refresh();
                 });
                 setup.Start();
                 plugins.Add(plugin.getName().ToLower(), plugin);

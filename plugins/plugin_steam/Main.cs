@@ -67,7 +67,7 @@ namespace plugin
             return await api.LoginPrompt(true, null, null, null, null);
         }
 
-        public override async Task Authenticate()
+        public async Task Authenticate()
         {
             await api.LoginPrompt(false, null, null, null, null);
         }
@@ -78,10 +78,9 @@ namespace plugin
             _ = instance.api.LoginPrompt(false, username, password, authCode, emailCode);
         }
 
-        public override async Task Sync()
+        public override async Task Refresh()
         {
-            if(!api.RequestGames())
-                Debug.WriteLine("Failed to sync!");
+            _ = importGames();
         }
 
         public override string getName() { return "Steam"; }

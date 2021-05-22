@@ -8,21 +8,26 @@
       d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <DataTemplate x:Key="Plugin">
-            <DockPanel HorizontalAlignment="Stretch"  Margin="10">
-                <CheckBox IsChecked="True" IsEnabled="False"/>
-                <StackPanel HorizontalAlignment="Stretch">
-                    <Label FontWeight="Bold" Content="{Binding Name}"/>
-                    <DockPanel HorizontalAlignment="Stretch">
-                        <StackPanel DockPanel.Dock="Left" Margin="0,0,50,0">
-                            <TextBlock>Author: <Run Text="{Binding Author, Mode=OneWay}"/></TextBlock>
-                            <TextBlock Margin="0,0,0,10">Version: <Run Text="{Binding Version, Mode=OneWay}"/></TextBlock>
-                        </StackPanel>
-                        <StackPanel DockPanel.Dock="Right">
-                            <Label Content="{Binding Summary}"/>
-                        </StackPanel>
-                    </DockPanel>
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="40px"/>
+                    <ColumnDefinition Width="200px"/>
+                    <ColumnDefinition Width="500px"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <CheckBox Grid.Row="0" Grid.Column="0"  Grid.RowSpan="2" IsChecked="True" IsEnabled="False"/>
+                <Label Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontWeight="Bold" Content="{Binding Name}"/>
+                <StackPanel Grid.Row="1" Grid.Column="1" Margin="0,0,50,0">
+                    <TextBlock>Author: <Run Text="{Binding Author, Mode=OneWay}"/></TextBlock>
+                    <TextBlock Margin="0,0,0,10">Version: <Run Text="{Binding Version, Mode=OneWay}"/></TextBlock>
                 </StackPanel>
-            </DockPanel>
+                <Label Grid.Row="1" Grid.Column="2" Content="{Binding Summary}"/>
+                <Button Grid.Row="0" Grid.Column="3" Grid.RowSpan="2" Content="Refresh" IsEnabled="{Binding RefreshEnabled}" Click="Plugin_Refresh" HorizontalAlignment="Right"/>
+            </Grid>
         </DataTemplate>
     </UserControl.Resources>
     <StackPanel>
