@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Cache;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
@@ -14,6 +15,8 @@ namespace CI536
         {
             BitmapImage bitmap = new BitmapImage();
             bitmap.BeginInit();
+            bitmap.CacheOption = BitmapCacheOption.OnDemand;
+            bitmap.UriCachePolicy = new RequestCachePolicy(RequestCacheLevel.CacheIfAvailable);
             bitmap.UriSource = new Uri(url, UriKind.Absolute);
             bitmap.EndInit();
 
