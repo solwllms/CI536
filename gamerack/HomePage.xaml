@@ -39,11 +39,11 @@
     <ScrollViewer>
         <StackPanel>
             <StackPanel x:Name="pnlRecent">
-                <Label Grid.Row="0" Content="Recent" HorizontalAlignment="Left" Margin="10,10,13,10" FontSize="24" VerticalAlignment="Top"/>
+                <Label Grid.Row="0" Content="Recent" HorizontalAlignment="Left" Margin="10,10,13,0" FontSize="24" VerticalAlignment="Top"/>
                 <ListView Grid.Row="1" SelectionMode="Single" Name="RecentList" ItemTemplate="{StaticResource ItemTemplate}">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" ItemWidth="200" ItemHeight="267" MaxWidth="{Binding ActualWidth, ElementName=userControl, Mode=OneWay}"/>
+                            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" ItemWidth="200" ItemHeight="267" Margin="0,0,0,20"/>
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
                     <ListView.ItemContainerStyle>
