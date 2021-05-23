@@ -96,13 +96,13 @@ namespace CI536
 
         void Navigate(Type type)
         {
-            //if (ContentFrame.CurrentSourcePageType != type)
-            //{
+            if (ContentFrame.CurrentSourcePageType != type)
+            {
                 currentGameSlug = null;
                 Loader.IsActive = true;
                 ContentFrame.NavigationService.StopLoading();
                 ContentFrame.Navigate(type);
-            //}
+            }
         }
 
         private void Search_GamesList(ModernWpf.Controls.AutoSuggestBox sender, ModernWpf.Controls.AutoSuggestBoxQuerySubmittedEventArgs args)

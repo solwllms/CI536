@@ -6,15 +6,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:local="clr-namespace:CI536"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:media="using:Microsoft.Xaml.Interactions.Media"
-    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:controls1="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
     mc:Ignorable="d" 
     d:DesignHeight="720" d:DesignWidth="1280">
     <UserControl.Resources>
         <DataTemplate x:Key="ItemTemplate" DataType="{x:Type local:GameTileEntry}">
             <Border Name="border" BorderBrush="#FF000000" BorderThickness="2" CornerRadius="7">
-                <Grid Background="Transparent">
+                <Grid Width="210" Height="280" Background="Transparent">
                     <Border Background="#262626" CornerRadius="7">
                         <DockPanel Name="Title">
                             <TextBlock Text="{Binding Title}" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
@@ -36,13 +34,13 @@
     </UserControl.Resources>
 
     <ScrollViewer>
-        <StackPanel>
+        <StackPanel Margin="10">
             <StackPanel x:Name="pnlRecent">
                 <Label Grid.Row="0" Content="Recent" HorizontalAlignment="Left" Margin="10,20,13,10" FontSize="24" VerticalAlignment="Top"/>
                 <ListView Grid.Row="1" SelectionMode="Single" Name="RecentList" ItemTemplate="{StaticResource ItemTemplate}">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" ItemWidth="200" ItemHeight="267" Margin="0,0,0,20"/>
+                            <VirtualizingStackPanel Orientation="Horizontal" CanHorizontallyScroll="False"/>
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
                     <ListView.ItemContainerStyle>
@@ -67,7 +65,7 @@
             <ListView Grid.Row="2" Name="GamesListTile" ItemTemplate="{StaticResource ItemTemplate}" SelectionMode="Single">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" ItemWidth="200" ItemHeight="267" MaxWidth="{Binding ActualWidth, ElementName=userControl, Mode=OneWay}"/>
+                        <controls1:VirtualizingWrapPanel SpacingMode="None" MaxWidth="{Binding ActualWidth, ElementName=userControl, Mode=OneWay}"/>
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>
                 <ListView.ItemContainerStyle>

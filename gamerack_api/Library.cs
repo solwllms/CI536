@@ -13,7 +13,7 @@ namespace CI536
     public class Library
     {
         private const string CONFIG_FILE = "library";
-        private const int MAX_RECENT = 16;
+        private const int MAX_RECENT = 8;
 
         private static string defaultPath;
 

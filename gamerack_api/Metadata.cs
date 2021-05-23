@@ -157,7 +157,7 @@ namespace CI536
             string summary = (string)json["summary"];
             string coverurl = null;
             if (json.ContainsKey("cover"))
-                coverurl = "http:" + ((string)json["cover"]["url"]).Replace("t_thumb", "t_cover_big_2x");
+                coverurl = "http:" + ((string)json["cover"]["url"]).Replace("t_thumb", "t_720p");
 
             List<string> developers = new List<string>();
             List<string> publishers = new List<string>();
