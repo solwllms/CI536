@@ -1,13 +1,16 @@
 ﻿<UserControl
-            x:Class="CI536.HomePage"
-            Name="userControl"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:CI536"
-             mc:Ignorable="d" 
-             d:DesignHeight="720" d:DesignWidth="1280">
+    x:Class="CI536.HomePage"
+    Name="userControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:CI536"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:media="using:Microsoft.Xaml.Interactions.Media"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    mc:Ignorable="d" 
+    d:DesignHeight="720" d:DesignWidth="1280">
     <UserControl.Resources>
         <DataTemplate x:Key="ItemTemplate" DataType="{x:Type local:GameTileEntry}">
             <Border Name="border" BorderBrush="#FF000000" BorderThickness="2" CornerRadius="7">
@@ -17,11 +20,11 @@
                             <TextBlock Text="{Binding Title}" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
                         </DockPanel>
                     </Border>
-                    <Border CornerRadius="7">
+                    <Border Name="CoverArt" CornerRadius="7" >
                         <Border.Background>
-                            <ImageBrush Stretch="Fill" ImageSource="{Binding Cover}" />
+                            <ImageBrush Stretch="Fill" ImageSource="{Binding Cover}"/>
                         </Border.Background>
-                    </Border>
+                    </Border>                    
                 </Grid>
             </Border>
             <DataTemplate.Triggers>
@@ -35,7 +38,7 @@
     <ScrollViewer>
         <StackPanel>
             <StackPanel x:Name="pnlRecent">
-                <Label Grid.Row="0" Content="Recent" HorizontalAlignment="Left" Margin="10,10,13,0" FontSize="24" VerticalAlignment="Top"/>
+                <Label Grid.Row="0" Content="Recent" HorizontalAlignment="Left" Margin="10,20,13,10" FontSize="24" VerticalAlignment="Top"/>
                 <ListView Grid.Row="1" SelectionMode="Single" Name="RecentList" ItemTemplate="{StaticResource ItemTemplate}">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>

@@ -15,7 +15,7 @@ namespace CI536
         {
             BitmapImage bitmap = new BitmapImage();
             bitmap.BeginInit();
-            bitmap.CacheOption = BitmapCacheOption.OnDemand;
+            bitmap.CacheOption = BitmapCacheOption.OnLoad;
             bitmap.UriCachePolicy = new RequestCachePolicy(RequestCacheLevel.CacheIfAvailable);
             bitmap.UriSource = new Uri(url, UriKind.Absolute);
             bitmap.EndInit();

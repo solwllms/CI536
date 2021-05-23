@@ -21,7 +21,7 @@ namespace CI536
     public partial class GameDetails : UserControl
     {
 
-        List<BitmapImage> media;
+        List<string> media;
         string slug;
 
         GameEntry entry => Library.GetGameEntry(slug);
@@ -61,10 +61,10 @@ namespace CI536
             lblRecentPlaytime.Content = ((float)entry.PlaytimeFortnightMins / 60).ToString("0.0") + " hrs";
 
             // media
-            media = new List<BitmapImage>();
-            foreach (var url in entry.Media)
+            media = new List<string>();
+            for (int i = 1; i < entry.Media.Count; i++)
             {
-                media.Add(WPFUtil.GetImageFromURL(url));
+                media.Add(entry.Media[i]);
             }
             MediaList.ItemsSource = media;
             MediaList.Items.Refresh();

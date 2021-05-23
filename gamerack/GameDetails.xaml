@@ -8,12 +8,15 @@
              d:DesignHeight="720" d:DesignWidth="1280">
     <UserControl.Resources>
         <DataTemplate x:Key="MediaEntry">
-            <Border CornerRadius="7">
-                <Border.Background>
-                    <ImageBrush Stretch="Fill" ImageSource="{Binding}" />
-                </Border.Background>
-                <Image Source="{Binding}" Stretch="Uniform" Margin="0" Height="Auto" Visibility="Hidden"/>
-            </Border>
+            <Grid>
+                <Border Name="Mask" Background="Black" CornerRadius="7"/>
+                <StackPanel>
+                    <Image Stretch="Fill" Source="{Binding IsAsync=true}" />
+                    <StackPanel.OpacityMask>
+                        <VisualBrush Visual="{Binding ElementName=Mask}" />
+                    </StackPanel.OpacityMask>
+                </StackPanel>
+            </Grid>
         </DataTemplate>
     </UserControl.Resources>
     <ScrollViewer>

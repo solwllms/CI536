@@ -93,7 +93,8 @@
                         </ListView.ItemContainerStyle>
                     </ListView>
                 </DockPanel>
-                <ui:Frame Grid.Column="1" x:Name="ContentFrame"/>
+                <ui:ProgressRing Name="Loader" Grid.Column="1" Width="60" Height="60" IsActive="True" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <ui:Frame Grid.Column="1" x:Name="ContentFrame" ContentRendered="ContentFrame_ContentRendered"/>
             </Grid>
         </ui:NavigationView>
     </DockPanel>

@@ -66,7 +66,7 @@ namespace CI536
 
         private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
-            Navigate(Activator.CreateInstance((Type)args.InvokedItemContainer.Tag));
+            Navigate((Type)args.InvokedItemContainer.Tag);
         }
 
         private void GamesList_LeftButtonDown(object sender, RoutedEventArgs e)
@@ -81,23 +81,28 @@ namespace CI536
 
         void ShowHome()
         {
-            Navigate(new HomePage());
+            Navigate(typeof(HomePage));
         }
 
         public void ShowGameDetails(string slug)
         {
-            if (!Library.HasGameEntry(slug)) return;
+            if (!Library.HasGameEntry(slug) || currentGameSlug == slug) return;
             NavView.SelectedItem = null;
             currentGameSlug = slug;
-            Navigate(new GameDetails(slug), true);
+            Loader.IsActive = true;
+            ContentFrame.NavigationService.StopLoading();
+            ContentFrame.Content = new GameDetails(slug);
         }
 
-        void Navigate(object page, bool bypass = false)
+        void Navigate(Type type)
         {
-            if (ContentFrame.CurrentSourcePageType != page.GetType() || bypass)
-            {
-                ContentFrame.Navigate(page);
-            }
+            //if (ContentFrame.CurrentSourcePageType != type)
+            //{
+                currentGameSlug = null;
+                Loader.IsActive = true;
+                ContentFrame.NavigationService.StopLoading();
+                ContentFrame.Navigate(type);
+            //}
         }
 
         private void Search_GamesList(ModernWpf.Controls.AutoSuggestBox sender, ModernWpf.Controls.AutoSuggestBoxQuerySubmittedEventArgs args)
@@ -166,6 +171,11 @@ namespace CI536
             showHidden = false;
             UserConfig.SetValue(CONFIG_FILE, "show-hidden", showHidden);
             RefreshGamesList();
+        }
+
+        private void ContentFrame_ContentRendered(object sender, EventArgs e)
+        {
+            Loader.IsActive = false;
         }
     }
 
