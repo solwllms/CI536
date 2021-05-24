@@ -25,10 +25,15 @@ namespace CI536
 			PluginManager.LoadPlugins();
 
 			MainWindow wnd = new MainWindow();
-			splash.Hide();
+			wnd.IsEnabled = false;
 			wnd.Show();
+			wnd.ContentRendered += (s, x) =>
+			{
+				wnd.IsEnabled = true;
+				splash.Hide();
+			};
 
-            Library.OnSaveChanges += () => wnd.RefreshContent();
+			Library.OnSaveChanges += () => wnd.RefreshContent();
 		}
 	}
 }
