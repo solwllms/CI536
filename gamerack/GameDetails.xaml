@@ -29,7 +29,7 @@
             <Image x:Name="imgHeader" Grid.Row="0" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             <DockPanel Grid.Row="1" Margin="20,20,20,20">
                 <Label x:Name="lblTitle" Foreground="White" Content="Game title" VerticalAlignment="Center" FontSize="36" FontWeight="Bold"/>
-                <Button DockPanel.Dock="Right" Height="50" HorizontalAlignment="Right" Click="ButtonPlay_Click">
+                <Button DockPanel.Dock="Right" Height="50" HorizontalAlignment="Right" Click="EditConfig_Click">
                     <ui:SymbolIcon
                                     Symbol="Setting"
                                     HorizontalAlignment="Left"

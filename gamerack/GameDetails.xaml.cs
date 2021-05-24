@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ModernWpf.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -72,12 +73,27 @@ namespace CI536
 
         private void ButtonPlay_Click(object sender, RoutedEventArgs e)
         {
-            entry.Launch();
+            if(!entry.Launch())
+            {
+                ContentDialog dialog = new ContentDialog
+                {
+                    Title = "Launch failed",
+                    Content = "Failed to launch game with the current configuration.",
+                    IsPrimaryButtonEnabled = false,
+                    CloseButtonText = "Ok"
+                };
+                _ = dialog.ShowAsync();
+            }
         }
 
         private void EditInfo_Click(object sender, RoutedEventArgs e)
         {
             EditGameInfo.EditInfo(slug);
+        }
+
+        private void EditConfig_Click(object sender, RoutedEventArgs e)
+        {
+            EditGameConfig.EditConfig(slug);
         }
     }
 }

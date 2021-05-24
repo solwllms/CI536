@@ -25,6 +25,10 @@ namespace plugin
             img.Source = GetSourceForOnRender("plugin.icon.png");
             ImportMethod main = new ImportMethod("Steam", "Import Steam library games, and launch these games through Steam.", ImportGames, img);
             RegisterImportMethod(main);
+
+            LaunchConfigType steamLaunch = new LaunchConfigType("Launch via Steam");
+            steamLaunch.canEditLaunchCommand = false;
+            RegisterLaunchConfigType("steam", steamLaunch);
         }
 
         public BitmapSource GetSourceForOnRender(string file)

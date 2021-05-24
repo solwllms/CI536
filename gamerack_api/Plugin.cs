@@ -22,14 +22,24 @@ namespace CI536
 
         private List<ImportMethod> importMethods;
 
+        public Dictionary<string, LaunchConfigType> LaunchConfigTypes => launchConfigTypes;
+
+        private Dictionary<string, LaunchConfigType> launchConfigTypes;
+
         public Plugin()
         {
             importMethods = new List<ImportMethod>();
+            launchConfigTypes = new Dictionary<string, LaunchConfigType>();
         }
 
         protected void RegisterImportMethod(ImportMethod im)
         {
             importMethods.Add(im);
+        }
+
+        protected void RegisterLaunchConfigType(string key, LaunchConfigType im)
+        {
+            launchConfigTypes.Add(key, im);
         }
 
         public virtual async Task<bool> Load()
@@ -80,6 +90,21 @@ namespace CI536
             this.summary = summary;
             this.handler = handler;
             this.icon = icon;
+        }
+    }
+
+    public class LaunchConfigType
+    {
+        public string alias;
+        public bool canEditLaunchCommand;
+
+        public string Alias => alias;
+        public bool CanEditLaunchCommand => canEditLaunchCommand;
+
+        public LaunchConfigType(string alias)
+        {
+            this.alias = alias;
+            canEditLaunchCommand = true;
         }
     }
 }

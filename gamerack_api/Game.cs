@@ -53,6 +53,9 @@ namespace CI536
         {
             if (Configs.ContainsKey(uuid))
             {
+                if (SelectedConfig == uuid)
+                    SelectedConfig = Configs.Keys.ElementAt(0);
+
                 Configs.Remove(uuid);
                 return true;
             }
@@ -71,13 +74,19 @@ namespace CI536
 
             Library.AddToRecent(Title);
 
-            if (configUUID == null) return false;
-            if (Configs.ContainsKey(configUUID))
+            if (configUUID == null || Configs.Count < 1) return false;
+            if (!Configs.ContainsKey(configUUID))
+                SelectedConfig = Configs.Keys.ElementAt(0);
+
+            string cmd = Configs[configUUID].LaunchCommand;
+            if (string.IsNullOrEmpty(cmd)) return false;
+
+            try
             {
                 System.Diagnostics.Process.Start(Configs[configUUID].LaunchCommand, Configs[configUUID].LaunchArguments);
-                return true;
             }
-            return false;
+            catch(Exception e) { return false; }
+            return true;
         }
     }
 
@@ -86,5 +95,12 @@ namespace CI536
         public string Type { get; set; }
         public string LaunchCommand { get; set; }
         public string LaunchArguments { get; set; }
+
+        public LaunchConfig()
+        {
+            Type = "";
+            LaunchCommand = "";
+            LaunchArguments = "";
+        }
     }
 }

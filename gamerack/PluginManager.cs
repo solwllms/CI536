@@ -11,8 +11,10 @@ namespace CI536
     class PluginManager
     {
         static Dictionary<string ,Plugin> plugins;
+        static Dictionary<string, LaunchConfigType> launchConfigTypes;
 
         public static Dictionary<string, Plugin> Registered => plugins;
+        public static Dictionary<string, LaunchConfigType> LaunchConfigTypes => launchConfigTypes;
 
         public static Plugin GetPlugin(string key)
         {
@@ -21,9 +23,17 @@ namespace CI536
             return plugins[key];
         }
 
+        public static LaunchConfigType GetLaunchConfigType(string type)
+        {
+            if (!launchConfigTypes.ContainsKey(type)) return null;
+
+            return launchConfigTypes[type];
+        }
+
         public static void LoadPlugins()
         {
             plugins = new Dictionary<string, Plugin>();
+            launchConfigTypes = new Dictionary<string, LaunchConfigType>();
             SetupPlugin(new plugin.PluginDefault());
 
             Debug.WriteLine("Finding dlls..");
@@ -71,6 +81,11 @@ namespace CI536
                 });
                 setup.Start();
                 plugins.Add(plugin.getName().ToLower(), plugin);
+
+                foreach (var launchConfigType in plugin.LaunchConfigTypes)
+                {
+                    launchConfigTypes.Add(launchConfigType.Key, launchConfigType.Value);
+                }
 
                 Debug.WriteLine("Registered: " + plugin.getName());
             }

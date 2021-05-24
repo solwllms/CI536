@@ -21,6 +21,9 @@ namespace plugin
 
             ImportMethod main = new ImportMethod("Local Disk", "Import game executables from local disk.", ImportGames, new SymbolIcon(Symbol.NewFolder));
             RegisterImportMethod(main);
+
+            LaunchConfigType mainType = new LaunchConfigType("Local App");
+            RegisterLaunchConfigType("", mainType);
         }
 
         public void ImportGames()
