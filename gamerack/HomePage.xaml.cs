@@ -44,7 +44,7 @@ namespace CI536
             if (games == null) return;
             foreach (var item in games)
             {
-                gamesEntriesRecent.Add(new GameTileEntry() { Title = item.Value.Title, Cover = item.Value.BoxArt == null ? null : WPFUtil.GetImageFromURL(item.Value.BoxArt), Slug = item.Key });
+                gamesEntriesRecent.Add(new GameTileEntry() { Title = item.Value.Title, Cover = item.Value.BoxArt == null ? null : WPFUtil.GetImageFromURL(item.Value.BoxArt, 210, 280, true), Slug = item.Key });
             }
             RecentList.ItemsSource = gamesEntriesRecent;
             RecentList.Items.Refresh();
@@ -57,7 +57,7 @@ namespace CI536
             foreach (var item in games.OrderBy(entry => entry.Value.GetSortingTitle()))
             {
                 if (item.Value.Hidden && !MainWindow.instance.showHidden) continue;
-                gamesEntries.Add(new GameTileEntry() { Title = item.Value.Title, Cover = item.Value.BoxArt == null ? null : WPFUtil.GetImageFromURL(item.Value.BoxArt), Slug = item.Key });
+                gamesEntries.Add(new GameTileEntry() { Title = item.Value.Title, Cover = item.Value.BoxArt == null ? null : WPFUtil.GetImageFromURL(item.Value.BoxArt, 210, 280, true), Slug = item.Key });
             }
             GamesListTile.ItemsSource = gamesEntries;
             GamesListTile.Items.Refresh();

@@ -11,7 +11,7 @@
             <Grid>
                 <Border Name="Mask" Background="Black" CornerRadius="7"/>
                 <StackPanel>
-                    <Image Stretch="Fill" Source="{Binding IsAsync=true}" />
+                    <Image Stretch="Fill" Source="{Binding}" />
                     <StackPanel.OpacityMask>
                         <VisualBrush Visual="{Binding ElementName=Mask}" />
                     </StackPanel.OpacityMask>

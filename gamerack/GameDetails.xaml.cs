@@ -37,7 +37,7 @@ namespace CI536
         {
             lblTitle.Content = entry.Title;
             if (entry.Media.Count > 0)
-                imgHeader.Source = WPFUtil.GetImageFromURL(entry.Media[0]);
+                imgHeader.Source = WPFUtil.GetImageFromURL(entry.Media[0], 1280, 720, false);
 
             lblSummary.Text = entry.Summary;
             if (entry.Developers.Count == 0)
@@ -64,7 +64,7 @@ namespace CI536
             media = new List<string>();
             for (int i = 1; i < entry.Media.Count; i++)
             {
-                media.Add(entry.Media[i]);
+                WPFUtil.GetImageFromURL(entry.Media[i], 1280, 720, false);
             }
             MediaList.ItemsSource = media;
             MediaList.Items.Refresh();
