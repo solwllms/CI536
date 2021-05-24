@@ -37,7 +37,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>CI536.App</StartupObject>
+    <StartupObject>CI536.AppMain</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>icon.ico</ApplicationIcon>
@@ -79,6 +79,7 @@
     <Compile Include="ImportWizard.xaml.cs">
       <DependentUpon>ImportWizard.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AppMain.cs" />
     <Compile Include="MetadataSearch.xaml.cs">
       <DependentUpon>MetadataSearch.xaml</DependentUpon>
     </Compile>
