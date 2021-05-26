@@ -11,7 +11,7 @@ A game library, launcher, and collection organisation tool created for CI536-202
 * Add and launch games from any storefront.
 * Unify game collection under one roof.
 * Plugin API interface for direct platform integrations.
-* Automatically populate game metadata from IGDB.
+* Automatically populate game metadata from [IGDB](https://www.igdb.com/).
 * Manually edit game metadata.
 * Add multiple launch configurations for a single entry.
 * Import Steam library games using the Steam plugin.
