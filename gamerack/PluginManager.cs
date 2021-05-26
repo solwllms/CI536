@@ -38,6 +38,9 @@ namespace CI536
 
             Debug.WriteLine("Finding dlls..");
             List<string> dlls = new List<string>();
+            if (!Directory.Exists(Directory.GetCurrentDirectory() + "/plugins/"))
+                Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/plugins/");
+
             foreach (string d in Directory.GetDirectories(Directory.GetCurrentDirectory() + "/plugins/"))
             {
                 dlls.AddRange(Directory.GetFiles(d, "*.dll"));
