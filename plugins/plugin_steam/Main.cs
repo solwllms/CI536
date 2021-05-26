@@ -23,10 +23,10 @@ namespace plugin
 
             Image img = new Image();
             img.Source = GetSourceForOnRender("plugin.icon.png");
-            ImportMethod main = new ImportMethod("Steam", "Import Steam library games, and launch these games through Steam.", ImportGames, img);
+            ImportMethod main = new ImportMethod("Steam", "Import games from your Steam® library.", ImportGames, img);
             RegisterImportMethod(main);
 
-            LaunchConfigType steamLaunch = new LaunchConfigType("Launch via Steam");
+            LaunchConfigType steamLaunch = new LaunchConfigType("Launch via Steam®");
             steamLaunch.canEditLaunchCommand = false;
             RegisterLaunchConfigType("steam", steamLaunch);
         }

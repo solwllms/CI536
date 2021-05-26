@@ -6,6 +6,8 @@ using System.Net;
 using System.Net.Cache;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Markup;
 using System.Windows.Media.Imaging;
 
 namespace CI536
@@ -31,6 +33,30 @@ namespace CI536
             };
 
             return bitmap;
+        }
+    }
+
+    // https://stackoverflow.com/questions/41062844/bind-to-resource-text-file/41063668#41063668
+    public class TextExtension : MarkupExtension
+    {
+        private readonly string fileName;
+
+        public TextExtension(string fileName)
+        {
+            this.fileName = fileName;
+        }
+
+        public override object ProvideValue(IServiceProvider serviceProvider)
+        {
+            // Error handling omitted
+            var uri = new Uri("pack://application:,,,/" + fileName);
+            using (var stream = Application.GetResourceStream(uri).Stream)
+            {
+                using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
         }
     }
 }

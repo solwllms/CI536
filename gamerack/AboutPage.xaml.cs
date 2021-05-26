@@ -1,0 +1,42 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace CI536
+{
+    /// <summary>
+    /// Interaction logic for SettingsPage.xaml
+    /// </summary>
+    public partial class AboutPage : UserControl
+    {
+        public AboutPage()
+        {
+            InitializeComponent();
+
+            Version version = Assembly.GetExecutingAssembly().GetName().Version;
+            lblVersion.Content = "v" + version.ToString();
+        }
+
+        private void OpenSourceNotices_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow.instance.Navigate(typeof(Notices));
+        }
+
+        private void IDGB_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.igdb.com/api");
+        }
+    }
+}

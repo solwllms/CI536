@@ -51,7 +51,7 @@
                 <ui:NavigationViewItem Content="Import game/library" Icon="Library" Tag="{x:Type local:ImportWizard}"/>
                 <ui:NavigationViewItemSeparator/>
                 <ui:NavigationViewItem Content="Plugins" Icon="Repair" Tag="{x:Type local:SettingsPage}" />
-                <ui:NavigationViewItem Content="About" Icon="Comment" Tag=""/>
+                <ui:NavigationViewItem Content="About" Icon="Comment" Tag="{x:Type local:AboutPage}"/>
             </ui:NavigationView.MenuItems>
 
             <Grid>

@@ -66,6 +66,8 @@ namespace CI536
 
         private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
+            if (args.InvokedItemContainer == null) return;
+
             Navigate((Type)args.InvokedItemContainer.Tag);
         }
 
@@ -94,7 +96,7 @@ namespace CI536
             ContentFrame.Content = new GameDetails(slug);
         }
 
-        void Navigate(Type type)
+        public void Navigate(Type type)
         {
             if (ContentFrame.CurrentSourcePageType != type)
             {
