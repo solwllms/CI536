@@ -238,6 +238,26 @@ namespace plugin
                     entry.PlaytimeFortnightMins = game.playtime_2weeks;
 
                     //TODO: we should add a config here too tho!
+
+                    bool hasConfig = false;
+                    foreach (var config in entry.Configs)
+                    {
+                        if (config.Value.Type == "steam")
+                        {
+                            hasConfig = true;
+                            break;
+                        }
+                    }
+
+                    if (!hasConfig)
+                    {
+                        entry.AddConfig(new LaunchConfig()
+                        {
+                            Type = "steam",
+                            LaunchCommand = $"steam://rungameid/{game.appid}"
+                        });
+                    }
+
                     existing++;
                 }
                 else
