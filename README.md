@@ -1,5 +1,5 @@
 <p align="center">
-    <img height="120px" src="assets/fullock-grad-black.svg" height="80"/>
+    <img height="120px" src="assets/fulllock-grad-black.svg" height="80"/>
 </p>
 
 ![Gamerack screenshot](/assets/screenshot.png)
