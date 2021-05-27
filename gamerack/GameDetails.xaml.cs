@@ -22,7 +22,7 @@ namespace CI536
     public partial class GameDetails : UserControl
     {
 
-        List<string> media;
+        List<BitmapImage> media;
         string slug;
 
         GameEntry entry => Library.GetGameEntry(slug);
@@ -62,10 +62,10 @@ namespace CI536
             lblRecentPlaytime.Content = ((float)entry.PlaytimeFortnightMins / 60).ToString("0.0") + " hrs";
 
             // media
-            media = new List<string>();
+            media = new List<BitmapImage>();
             for (int i = 1; i < entry.Media.Count; i++)
             {
-                WPFUtil.GetImageFromURL(entry.Media[i], 1280, 720, false);
+                media.Add(WPFUtil.GetImageFromURL(entry.Media[i], 1280, 720, false));
             }
             MediaList.ItemsSource = media;
             MediaList.Items.Refresh();
